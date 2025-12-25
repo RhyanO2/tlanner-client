@@ -1,0 +1,24 @@
+import { Route, Routes } from 'react-router-dom'
+import { AppShell } from './components/AppShell'
+import { ProtectedRoute } from './components/ProtectedRoute'
+import { Dashboard } from './pages/Dashboard'
+import { Landing } from './pages/Landing'
+import { Login } from './pages/Login'
+import { Register } from './pages/Register'
+
+function App() {
+  return (
+    <AppShell>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
+      </Routes>
+    </AppShell>
+  )
+}
+
+export default App
