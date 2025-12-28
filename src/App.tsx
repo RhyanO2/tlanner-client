@@ -5,6 +5,7 @@ import { Dashboard } from './pages/Dashboard'
 import { Landing } from './pages/Landing'
 import { Login } from './pages/Login'
 import { Register } from './pages/Register'
+import { WorkspaceTasks } from './pages/WorkspaceTasks'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/workspace/:workspaceId" element={<WorkspaceTasks />} />
         </Route>
       </Routes>
     </AppShell>
