@@ -9,7 +9,7 @@ export function AppShell(props: { children: React.ReactNode }) {
     <div className="app">
       <header className="header">
         <div className="container header-inner">
-          <Link className="brand" to="/">
+          <Link className="brand" to={authed ? '/dashboard' : '/'}>
             {/* <span className="brand-mark" aria-hidden="true" /> */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
