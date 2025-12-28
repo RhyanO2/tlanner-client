@@ -12,13 +12,18 @@ import { clearToken, getToken, getUserIdFromToken } from '../lib/auth';
 export function Dashboard() {
   const navigate = useNavigate();
   const token = getToken();
-  const userId = useMemo(() => (token ? getUserIdFromToken(token) : null), [token]);
+  const userId = useMemo(
+    () => (token ? getUserIdFromToken(token) : null),
+    [token]
+  );
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [editingWorkspace, setEditingWorkspace] = useState<Workspace | null>(null);
+  const [editingWorkspace, setEditingWorkspace] = useState<Workspace | null>(
+    null
+  );
   const [workspaceTitle, setWorkspaceTitle] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -37,7 +42,9 @@ export function Dashboard() {
       const res = await getUserWorkspacesApi(userId);
       setWorkspaces(res.workspaces);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load workspaces');
+      setError(
+        err instanceof Error ? err.message : 'Failed to load workspaces'
+      );
     } finally {
       setLoading(false);
     }
@@ -58,7 +65,9 @@ export function Dashboard() {
       setWorkspaceTitle('');
       await load();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create workspace');
+      setError(
+        err instanceof Error ? err.message : 'Failed to create workspace'
+      );
     } finally {
       setSubmitting(false);
     }
@@ -78,14 +87,20 @@ export function Dashboard() {
       setWorkspaceTitle('');
       await load();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update workspace');
+      setError(
+        err instanceof Error ? err.message : 'Failed to update workspace'
+      );
     } finally {
       setSubmitting(false);
     }
   }
 
   async function handleDelete(workspaceId: string) {
-    if (!confirm('Are you sure you want to delete this workspace? All tasks will be deleted.')) {
+    if (
+      !confirm(
+        'Are you sure you want to delete this workspace? All tasks will be deleted.'
+      )
+    ) {
       return;
     }
 
@@ -95,7 +110,9 @@ export function Dashboard() {
       await deleteWorkspaceApi(workspaceId);
       await load();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete workspace');
+      setError(
+        err instanceof Error ? err.message : 'Failed to delete workspace'
+      );
     }
   }
 
@@ -120,7 +137,9 @@ export function Dashboard() {
       <div className="page-header">
         <div>
           <h2 className="page-title">Dashboard</h2>
-          <p className="muted">Manage your workspaces and organize your tasks.</p>
+          <p className="muted">
+            Manage your workspaces and organize your tasks.
+          </p>
         </div>
         <button
           className="button button-primary"
@@ -137,7 +156,9 @@ export function Dashboard() {
       {!loading && !error && workspaces.length === 0 ? (
         <div className="card">
           <div className="card-title">No workspaces yet</div>
-          <div className="muted">Create your first workspace to start organizing tasks.</div>
+          <div className="muted">
+            Create your first workspace to start organizing tasks.
+          </div>
         </div>
       ) : null}
 
@@ -203,7 +224,9 @@ export function Dashboard() {
                   autoFocus
                 />
               </label>
-              <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
+              <div
+                style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}
+              >
                 <button
                   className="button button-primary"
                   type="submit"
@@ -250,7 +273,9 @@ export function Dashboard() {
                   autoFocus
                 />
               </label>
-              <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
+              <div
+                style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}
+              >
                 <button
                   className="button button-primary"
                   type="submit"
