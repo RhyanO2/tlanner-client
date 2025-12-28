@@ -251,7 +251,7 @@ export async function updateWorkspaceApi(
 export async function deleteWorkspaceApi(
   workspaceId: string
 ): Promise<MessageResponse> {
-  return apiFetch<MessageResponse>(`/workspace/${workspaceId}`, {
+  return apiFetchDelete<MessageResponse>(`/workspace/${workspaceId}`, {
     method: 'DELETE',
   });
 }

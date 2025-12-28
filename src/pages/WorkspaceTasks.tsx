@@ -295,9 +295,9 @@ export function WorkspaceTasks() {
   }, [workspaceId, userId]);
 
   const statusColumns: { status: TaskStatus; label: string }[] = [
-    { status: 'pending', label: 'Pending' },
-    { status: 'in_progress', label: 'In Progress' },
-    { status: 'done', label: 'Done' },
+    { status: 'pending', label: 'Pending 🟠' },
+    { status: 'in_progress', label: 'In Progress 🟡' },
+    { status: 'done', label: 'Done 🟢' },
   ];
 
   return (
@@ -310,10 +310,10 @@ export function WorkspaceTasks() {
             type="button"
             style={{ marginBottom: '0.5rem' }}
           >
-            ← Voltar ao Dashboard
+            ← Back to workspaces
           </button>
           <h2 className="page-title">{workspaceTitle}</h2>
-          <p className="muted">Gerencie as tarefas deste workspace.</p>
+          <p className="muted">Manage tasks from this workspace</p>
         </div>
         <button
           className="button button-primary"
@@ -489,7 +489,7 @@ export function WorkspaceTasks() {
                   disabled={submitting}
                   style={{ flex: 1 }}
                 >
-                  Cancelar
+                  Cancel
                 </button>
               </div>
             </form>
@@ -501,7 +501,7 @@ export function WorkspaceTasks() {
       {editingTask && (
         <div className="modal-overlay" onClick={closeModals}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h3 className="modal-title">Editar Tarefa</h3>
+            <h3 className="modal-title">Edit Task</h3>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
