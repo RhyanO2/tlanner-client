@@ -4,16 +4,20 @@ const DEFAULT_API_BASE_URL = 'http://localhost:3000';
 
 export function getApiBaseUrl(): string {
   const envBase = import.meta.env.VITE_API_BASE_URL as string | undefined;
-  return (envBase && envBase.trim().length > 0 ? envBase : DEFAULT_API_BASE_URL).replace(/\/$/, '');
+  return (
+    envBase && envBase.trim().length > 0 ? envBase : DEFAULT_API_BASE_URL
+  ).replace(/\/$/, '');
 }
 
 export type TaskStatus = 'pending' | 'in_progress' | 'done';
+export type TaskPriority = 'low' | 'normal' | 'high' | 'urgent';
 
 export type Task = {
   title: string;
   status: TaskStatus;
   description: string;
-  userRelated: string;
+  priority: TaskPriority;
+  id_workspace: string;
 };
 
 export type TasksResponse = {
@@ -21,7 +25,10 @@ export type TasksResponse = {
   tasks: Task[];
 };
 
-export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
+export async function apiFetch<T>(
+  path: string,
+  init?: RequestInit
+): Promise<T> {
   const token = getToken();
   const res = await fetch(`${getApiBaseUrl()}${path}`, {
     ...init,
@@ -53,7 +60,11 @@ export async function loginApi(input: { email: string; password: string }) {
   });
 }
 
-export async function registerApi(input: { name: string; email: string; password: string }) {
+export async function registerApi(input: {
+  name: string;
+  email: string;
+  password: string;
+}) {
   return apiFetch<{ User: string }>('/register', {
     method: 'POST',
     body: JSON.stringify(input),
