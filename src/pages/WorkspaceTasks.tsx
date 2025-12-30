@@ -12,11 +12,11 @@ import {
 } from '../lib/api';
 import { clearToken, getToken, getUserIdFromToken } from '../lib/auth';
 
-function statusLabel(status: TaskStatus) {
-  if (status === 'pending') return 'Pending';
-  if (status === 'in_progress') return 'In Progress';
-  return 'Done';
-}
+// function statusLabel(status: TaskStatus) {
+//   if (status === 'pending') return 'Pending';
+//   if (status === 'in_progress') return 'In Progress';
+//   return 'Done';
+// }
 
 function priorityLabel(priority: TaskPriority) {
   const labels: Record<TaskPriority, string> = {
