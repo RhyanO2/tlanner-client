@@ -2,6 +2,7 @@
   "name": "tlanner-web",
   "private": true,
   "version": "0.0.0",
+  "packageManager": "pnpm@9.15.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,7 +16,6 @@
     "react-router-dom": "^7.11.0"
   },
   "devDependencies": {
-    "packageManager": "pnpm@7.5.1",
     "@eslint/js": "^9.39.1",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
