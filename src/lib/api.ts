@@ -1,6 +1,6 @@
 import { getToken } from './auth';
 
-const DEFAULT_API_BASE_URL = 'http://localhost:3000';
+const DEFAULT_API_BASE_URL = 'https://tlanner-main-1.onrender.com/';
 
 export function getApiBaseUrl(): string {
   const envBase = import.meta.env.VITE_API_BASE_URL as string | undefined;
