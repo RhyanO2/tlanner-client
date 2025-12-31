@@ -1,3 +1,11 @@
+html,
+body {
+  height: 100%;
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
 :root {
   --bg: #0b1020;
   --bg-2: #0f1730;
@@ -596,16 +604,44 @@ textarea.input {
 }
 
 @media (max-width: 900px) {
+  .container {
+    width: calc(100% - 32px);
+  }
+
+  .header-inner {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .nav .nav-link {
+    display: none;
+  }
+
+  .button {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
   .hero {
     grid-template-columns: 1fr;
+
+    text-align: center;
   }
-  .feature-grid {
-    grid-template-columns: 1fr;
+
+  .hero-title {
+    font-size: 32px;
   }
-  .grid {
-    grid-template-columns: 1fr;
+
+  .hero-cta {
+    justify-content: center;
   }
-  .kanban-board {
-    grid-template-columns: 1fr;
+
+  .hero-stats {
+    justify-content: center;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
   }
 }
