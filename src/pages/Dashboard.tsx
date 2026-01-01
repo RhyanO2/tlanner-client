@@ -56,20 +56,36 @@ export function Dashboard() {
     setSubmitting(true);
     setError(null);
 
+    const titleToCreate = workspaceTitle.trim();
+
+    const tempWorkspace: Workspace = {
+      id: createTempId(),
+      title: titleToCreate,
+      id_user: userId,
+    };
+
+    setWorkspaces((current) => [tempWorkspace, ...current]);
+
+    setShowCreateModal(false);
+    setWorkspaceTitle('');
+    setSubmitting(false);
+
     try {
       await createWorkspaceApi({
-        title: workspaceTitle.trim(),
+        title: titleToCreate,
         id_user: userId,
       });
-      setShowCreateModal(false);
-      setWorkspaceTitle('');
-      await load();
+
+      const res = await getUserWorkspacesApi(userId);
+
+      setWorkspaces(res.workspaces);
     } catch (err) {
+      setWorkspaces((current) =>
+        current.filter((w) => w.id !== tempWorkspace.id)
+      );
       setError(
         err instanceof Error ? err.message : 'Failed to create workspace'
       );
-    } finally {
-      setSubmitting(false);
     }
   }
 
@@ -79,19 +95,36 @@ export function Dashboard() {
     setSubmitting(true);
     setError(null);
 
+    const previousWorkspace = editingWorkspace;
+
+    const optimisticWorkspace = {
+      ...editingWorkspace,
+      title: workspaceTitle.trim(),
+    };
+
+    setWorkspaces((current) =>
+      current.map((w) =>
+        w.id === editingWorkspace.id ? optimisticWorkspace : w
+      )
+    );
+
+    setEditingWorkspace(null);
+    setWorkspaceTitle('');
+    setSubmitting(false);
+
     try {
       await updateWorkspaceApi(editingWorkspace.id, {
         title: workspaceTitle.trim(),
       });
-      setEditingWorkspace(null);
-      setWorkspaceTitle('');
-      await load();
     } catch (err) {
+      setWorkspaces((current) =>
+        current.map((w) =>
+          w.id === previousWorkspace.id ? previousWorkspace : w
+        )
+      );
       setError(
         err instanceof Error ? err.message : 'Failed to update workspace'
       );
-    } finally {
-      setSubmitting(false);
     }
   }
 
@@ -106,14 +139,23 @@ export function Dashboard() {
 
     setError(null);
 
+    const workspaceToDelete = workspaces.find((w) => w.id === workspaceId);
+    if (!workspaceToDelete) return;
+
+    setWorkspaces((current) => current.filter((w) => w.id !== workspaceId));
+
     try {
       await deleteWorkspaceApi(workspaceId);
-      await load();
     } catch (err) {
+      setWorkspaces((current) => [...current, workspaceToDelete]);
       setError(
         err instanceof Error ? err.message : 'Failed to delete workspace'
       );
     }
+  }
+
+  function createTempId() {
+    return `temp-${crypto.randomUUID()}`;
   }
 
   function openEditModal(workspace: Workspace) {

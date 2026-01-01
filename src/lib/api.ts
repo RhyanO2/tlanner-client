@@ -56,6 +56,13 @@ export type MessageResponse = {
   message: string;
 };
 
+export type CreateTaskResponse = {
+  task: Task;
+};
+export type CreateWorkspaceResponse = {
+  workspace: Workspace;
+};
+
 // Base API fetch function
 export async function apiFetch<T>(
   path: string,
@@ -231,8 +238,8 @@ export async function getWorkspaceApi(
 export async function createWorkspaceApi(input: {
   title: string;
   id_user: string;
-}): Promise<MessageResponse> {
-  return apiFetch<MessageResponse>('/workspace', {
+}): Promise<CreateWorkspaceResponse> {
+  return apiFetch<CreateWorkspaceResponse>('/workspace', {
     method: 'POST',
     body: JSON.stringify(input),
   });
@@ -273,8 +280,8 @@ export async function createTaskApi(
     due_date: string;
     priority?: TaskPriority;
   }
-): Promise<MessageResponse> {
-  return apiFetch<MessageResponse>(`/workspace/${workspaceId}/tasks`, {
+): Promise<CreateTaskResponse> {
+  return apiFetch<CreateTaskResponse>(`/workspace/${workspaceId}/tasks`, {
     method: 'POST',
     body: JSON.stringify(input),
   });

@@ -18,6 +18,10 @@ import { clearToken, getToken, getUserIdFromToken } from '../lib/auth';
 //   return 'Done';
 // }
 
+function createTempId() {
+  return `temp-${crypto.randomUUID()}`;
+}
+
 function priorityLabel(priority: TaskPriority) {
   const labels: Record<TaskPriority, string> = {
     low: 'Low',
@@ -125,23 +129,40 @@ export function WorkspaceTasks() {
   }
 
   async function handleCreate() {
-    load();
+    // load();
     if (!workspaceId || !taskTitle.trim()) return;
 
     setSubmitting(true);
     setError(null);
 
+    const tempTask: Task = {
+      id: createTempId(),
+      title: taskTitle.trim(),
+      description: taskDescription.trim(),
+      status: 'pending',
+      due_date: taskDueDate || new Date().toISOString(),
+      priority: taskPriority,
+      id_workspace: workspaceId,
+    };
+
+    setTasks((current) => [tempTask, ...current]);
+
+    setShowCreateModal(false);
+    resetForm();
+
     try {
-      await createTaskApi(workspaceId, {
-        title: taskTitle.trim(),
-        description: taskDescription.trim(),
-        due_date: taskDueDate || new Date().toISOString(),
-        priority: taskPriority,
+      const created = await createTaskApi(tempTask.id_workspace, {
+        title: tempTask.title,
+        description: tempTask.description,
+        due_date: tempTask.due_date ?? new Date().toISOString(),
+        priority: tempTask.priority,
       });
-      setShowCreateModal(false);
-      resetForm();
-      await load();
+      setTasks((current) =>
+        current.map((t) => (t.id === tempTask.id ? created.task : t))
+      );
     } catch (err) {
+      setTasks((current) => current.filter((t) => t.id !== tempTask.id));
+
       setError(err instanceof Error ? err.message : 'Failed to create task');
     } finally {
       setSubmitting(false);
@@ -154,16 +175,35 @@ export function WorkspaceTasks() {
     setSubmitting(true);
     setError(null);
 
-    try {
-      // Format due_date correctly
-      let dueDate = taskDueDate;
-      if (!dueDate) {
-        dueDate = new Date().toISOString();
-      } else {
-        // Ensure it's in ISO format
-        dueDate = new Date(dueDate).toISOString();
-      }
+    // Format due_date correctly
+    let dueDate = taskDueDate;
+    if (!dueDate) {
+      dueDate = new Date().toISOString();
+    } else {
+      dueDate = new Date(dueDate).toISOString();
+    }
 
+    const previousTask = editingTask;
+
+    const optimisticTask = {
+      ...editingTask,
+      title: taskTitle.trim(),
+      description: taskDescription.trim(),
+      status: taskStatus,
+      due_date: dueDate,
+      priority: taskPriority,
+    };
+
+    setTasks((current) =>
+      current.map((t) => (t.id === editingTask.id ? optimisticTask : t))
+    );
+
+    setEditingTask(null);
+    resetForm();
+    setSubmitting(false);
+
+    try {
+      // Faz a requisição em background
       await updateTaskApi(editingTask.id, {
         title: taskTitle.trim(),
         description: taskDescription.trim(),
@@ -171,13 +211,11 @@ export function WorkspaceTasks() {
         due_date: dueDate,
         priority: taskPriority,
       });
-      setEditingTask(null);
-      resetForm();
-      await load();
     } catch (err) {
+      setTasks((current) =>
+        current.map((t) => (t.id === previousTask.id ? previousTask : t))
+      );
       setError(err instanceof Error ? err.message : 'Failed to update task');
-    } finally {
-      setSubmitting(false);
     }
   }
 
@@ -185,6 +223,12 @@ export function WorkspaceTasks() {
     if (task.status === newStatus) return;
 
     setError(null);
+
+    const previousStatus = task.status;
+
+    setTasks((current) =>
+      current.map((t) => (t.id === task.id ? { ...t, status: newStatus } : t))
+    );
 
     try {
       // Format due_date correctly - use existing date or current date
@@ -210,13 +254,16 @@ export function WorkspaceTasks() {
         due_date: dueDate,
         priority: task.priority,
       });
-      await load();
     } catch (err) {
+      setTasks((current) =>
+        current.map((t) =>
+          t.id === task.id ? { ...t, status: previousStatus } : t
+        )
+      );
       const errorMessage =
         err instanceof Error ? err.message : 'Failed to update task status';
       setError(errorMessage);
       console.error('Error updating task status:', err);
-      // Don't reload on error to keep the UI state
     }
   }
 
@@ -227,10 +274,15 @@ export function WorkspaceTasks() {
 
     setError(null);
 
+    const taskToDelete = tasks.find((t) => (t.id = taskId));
+    if (!taskToDelete) return;
+
+    setTasks((current) => current.filter((t) => t.id !== taskId));
+
     try {
       await deleteTaskApi(taskId);
-      await load();
     } catch (err) {
+      setTasks((current) => [...current, taskToDelete]);
       setError(err instanceof Error ? err.message : 'Failed to delete task');
     }
   }
