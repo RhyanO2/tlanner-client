@@ -16,6 +16,9 @@ body {
   --border: rgba(255, 255, 255, 0.12);
   --primary: #6d5efc;
   --primary-2: #8b5cf6;
+   --primary-dark: #b91c1c; 
+  --success-dark: #047857; 
+  --info-dark: #1e40af;
   --success: #22c55e;
   --warning: #f59e0b;
   --radius: 14px;
@@ -603,6 +606,8 @@ textarea.input {
   font-family: inherit;
 }
 
+
+
 @media (max-width: 900px) {
   .container {
     width: calc(100% - 32px);
@@ -669,3 +674,4 @@ textarea.input {
     font-size: 13px;
   }
 }
+

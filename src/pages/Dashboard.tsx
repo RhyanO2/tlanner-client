@@ -27,11 +27,21 @@ export function Dashboard() {
   const [workspaceTitle, setWorkspaceTitle] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
+  // Verifica autenticação antes de carregar
+  useEffect(() => {
+    if (!token || !userId) {
+      clearToken();
+      navigate('/login', { replace: true });
+      return;
+    }
+    void load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId, token]);
+
   async function load() {
     if (!userId) {
       clearToken();
-      setError('Invalid session. Please sign in again.');
-      setLoading(false);
+      navigate('/login', { replace: true });
       return;
     }
 
@@ -42,6 +52,12 @@ export function Dashboard() {
       const res = await getUserWorkspacesApi(userId);
       setWorkspaces(res.workspaces);
     } catch (err) {
+      // Se erro 401, token expirado - redireciona para login
+      if (err instanceof Error && err.message.includes('401')) {
+        clearToken();
+        navigate('/login', { replace: true });
+        return;
+      }
       setError(
         err instanceof Error ? err.message : 'Failed to load workspaces'
       );
@@ -83,6 +99,14 @@ export function Dashboard() {
       setWorkspaces((current) =>
         current.filter((w) => w.id !== tempWorkspace.id)
       );
+
+      // Se erro 401, redireciona para login
+      if (err instanceof Error && err.message.includes('401')) {
+        clearToken();
+        navigate('/login', { replace: true });
+        return;
+      }
+
       setError(
         err instanceof Error ? err.message : 'Failed to create workspace'
       );
@@ -122,6 +146,14 @@ export function Dashboard() {
           w.id === previousWorkspace.id ? previousWorkspace : w
         )
       );
+
+      // Se erro 401, redireciona para login
+      if (err instanceof Error && err.message.includes('401')) {
+        clearToken();
+        navigate('/login', { replace: true });
+        return;
+      }
+
       setError(
         err instanceof Error ? err.message : 'Failed to update workspace'
       );
@@ -148,6 +180,14 @@ export function Dashboard() {
       await deleteWorkspaceApi(workspaceId);
     } catch (err) {
       setWorkspaces((current) => [...current, workspaceToDelete]);
+
+      // Se erro 401, redireciona para login
+      if (err instanceof Error && err.message.includes('401')) {
+        clearToken();
+        navigate('/login', { replace: true });
+        return;
+      }
+
       setError(
         err instanceof Error ? err.message : 'Failed to delete workspace'
       );
@@ -168,11 +208,6 @@ export function Dashboard() {
     setEditingWorkspace(null);
     setWorkspaceTitle('');
   }
-
-  useEffect(() => {
-    void load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId]);
 
   return (
     <div className="container">
