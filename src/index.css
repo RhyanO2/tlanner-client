@@ -16,8 +16,8 @@ body {
   --border: rgba(255, 255, 255, 0.12);
   --primary: #6d5efc;
   --primary-2: #8b5cf6;
-   --primary-dark: #b91c1c; 
-  --success-dark: #047857; 
+  --primary-dark: #b91c1c;
+  --success-dark: #047857;
   --info-dark: #1e40af;
   --success: #22c55e;
   --warning: #f59e0b;
@@ -606,7 +606,23 @@ textarea.input {
   font-family: inherit;
 }
 
+.input-wrapper {
+  position: relative;
+}
 
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.input {
+  width: 100%;
+}
 
 @media (max-width: 900px) {
   .container {
@@ -674,4 +690,3 @@ textarea.input {
     font-size: 13px;
   }
 }
-

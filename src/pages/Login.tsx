@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginApi } from '../lib/api';
 import { setToken } from '../lib/auth';
+import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 
 export function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -47,19 +49,32 @@ export function Login() {
 
           <label className="field">
             <span className="field-label">Password</span>
-            <input
-              className="input"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              type="password"
-              autoComplete="current-password"
-              required
-            />
+            <div className="input-wrapper">
+              <input
+                className="input"
+                type={visible ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="new-password"
+                required
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setVisible((v) => !v)}
+              >
+                {visible ? <FaRegEyeSlash /> : <FaRegEye />}
+              </button>
+            </div>
           </label>
 
           {error ? <div className="alert">{error}</div> : null}
 
-          <button className="button button-primary" disabled={loading} type="submit">
+          <button
+            className="button button-primary"
+            disabled={loading}
+            type="submit"
+          >
             {loading ? 'Signing in…' : 'Sign in'}
           </button>
         </form>

@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { registerApi } from '../lib/api';
+import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 
 export function Register() {
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -58,19 +60,32 @@ export function Register() {
 
           <label className="field">
             <span className="field-label">Password</span>
-            <input
-              className="input"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              type="password"
-              autoComplete="new-password"
-              required
-            />
+            <div className="input-wrapper">
+              <input
+                className="input"
+                type={visible ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="new-password"
+                required
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setVisible((v) => !v)}
+              >
+                {visible ? <FaRegEyeSlash /> : <FaRegEye />}
+              </button>
+            </div>
           </label>
 
           {error ? <div className="alert">{error}</div> : null}
 
-          <button className="button button-primary" disabled={loading} type="submit">
+          <button
+            className="button button-primary"
+            disabled={loading}
+            type="submit"
+          >
             {loading ? 'Creating…' : 'Create account'}
           </button>
         </form>
