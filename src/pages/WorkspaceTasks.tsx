@@ -122,7 +122,7 @@ export function WorkspaceTasks() {
       setWorkspaceTitle(workspaceRes.results[0]?.title || 'Workspace');
       setTasks(tasksRes.tasks);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load tasks');
+      console.error(err);
     } finally {
       setLoading(false);
     }
