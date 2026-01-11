@@ -52,15 +52,7 @@ export function Dashboard() {
       const res = await getUserWorkspacesApi(userId);
       setWorkspaces(res.workspaces);
     } catch (err) {
-      // Se erro 401, token expirado - redireciona para login
-      if (err instanceof Error && err.message.includes('401')) {
-        clearToken();
-        navigate('/login', { replace: true });
-        return;
-      }
-      setError(
-        err instanceof Error ? err.message : 'Failed to load workspaces'
-      );
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -80,8 +72,7 @@ export function Dashboard() {
       id_user: userId,
     };
 
-    setWorkspaces((current) => [tempWorkspace, ...current]);
-
+    setWorkspaces((current) => [...current, tempWorkspace]);
     setShowCreateModal(false);
     setWorkspaceTitle('');
     setSubmitting(false);
@@ -100,7 +91,6 @@ export function Dashboard() {
         current.filter((w) => w.id !== tempWorkspace.id)
       );
 
-      // Se erro 401, redireciona para login
       if (err instanceof Error && err.message.includes('401')) {
         clearToken();
         navigate('/login', { replace: true });
