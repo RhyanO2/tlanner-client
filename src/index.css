@@ -197,6 +197,16 @@ a {
   background: transparent;
 }
 
+.button-finish {
+  background: linear-gradient(100deg, var(--info-dark));
+  border-color: rgba(255, 255, 255, 0.12);
+}
+.button-finish:hover {
+  transform: translateY(-1px);
+  background: linear-gradient(100deg, var(--info-dark), var(--success-dark));
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
 .badge {
   display: inline-flex;
   align-items: center;

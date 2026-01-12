@@ -565,7 +565,7 @@ export function WorkspaceTasks() {
               }}
             >
               <button
-                className="button button-secondary"
+                className="button button-finish"
                 type="button"
                 onClick={handleFinishTask}
                 disabled={submitting}
