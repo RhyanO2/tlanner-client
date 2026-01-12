@@ -112,3 +112,64 @@
   border: none;
   cursor: pointer;
 }
+
+.settings-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.settings-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.settings-input {
+  padding: 0.75rem;
+  border-radius: var(--radius);
+  background: var(--card-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.settings-input:focus {
+  outline: none;
+  border-color: var(--primary-2);
+  background: var(--card);
+}
+
+.settings-input::placeholder {
+  color: var(--muted);
+}
+
+.settings-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.settings-actions .primary-btn {
+  background: var(--primary-2);
+}
+
+.settings-actions .primary-btn:hover {
+  background: var(--primary);
+}
+
+.settings-actions .secondary-btn {
+  flex: 1;
+}
