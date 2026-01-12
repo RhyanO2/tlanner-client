@@ -63,6 +63,9 @@ export function AppShell(props: { children: React.ReactNode }) {
                 <NavLink className="nav-link" to="/dashboard">
                   Dashboard
                 </NavLink>
+                <NavLink className="nav-link" to="/pomo">
+                  Pomodoro
+                </NavLink>
                 <button
                   className="button button-ghost"
                   onClick={() => {

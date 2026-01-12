@@ -11,6 +11,7 @@ import {
   type TaskPriority,
 } from '../lib/api';
 import { clearToken, getToken, getUserIdFromToken } from '../lib/auth';
+import PomodoroTimer from '../components/pomodoro/pomodoro';
 
 // function statusLabel(status: TaskStatus) {
 //   if (status === 'pending') return 'Pending';
@@ -90,6 +91,9 @@ export function WorkspaceTasks() {
   const [submitting, setSubmitting] = useState(false);
   const [draggedTask, setDraggedTask] = useState<Task | null>(null);
   const [dragOverColumn, setDragOverColumn] = useState<TaskStatus | null>(null);
+  const [showPomodoroModal, setShowPomodoroModal] = useState(false);
+  const [selectedTaskForPomodoro, setSelectedTaskForPomodoro] =
+    useState<Task | null>(null);
 
   // Form state
   const [taskTitle, setTaskTitle] = useState('');
@@ -298,6 +302,10 @@ export function WorkspaceTasks() {
     );
   }
 
+  // function openPomodoroModal(task: Task){
+
+  // }
+
   function resetForm() {
     setTaskTitle('');
     setTaskDescription('');
@@ -309,7 +317,14 @@ export function WorkspaceTasks() {
   function closeModals() {
     setShowCreateModal(false);
     setEditingTask(null);
+    setShowPomodoroModal(false);
+    setSelectedTaskForPomodoro(null);
     resetForm();
+  }
+
+  function openPomodoroModal(task: Task) {
+    setSelectedTaskForPomodoro(task);
+    setShowPomodoroModal(true);
   }
 
   function handleDragStart(e: React.DragEvent, task: Task) {
@@ -340,6 +355,38 @@ export function WorkspaceTasks() {
     setDraggedTask(null);
     setDragOverColumn(null);
   }
+
+  const handleFinishTask = async () => {
+    if (!selectedTaskForPomodoro) return;
+
+    try {
+      setSubmitting(true);
+
+      const task = selectedTaskForPomodoro;
+
+      await updateTaskApi(task.id, {
+        title: task.title,
+        description: task.description,
+        status: 'done',
+        due_date: task.due_date || `${new Date()}`,
+        priority: task.priority,
+      });
+
+      setTasks(
+        tasks.map((task) =>
+          task.id === selectedTaskForPomodoro.id
+            ? { ...task, status: 'done' }
+            : task
+        )
+      );
+
+      closeModals();
+    } catch (err) {
+      console.error('Erro ao finalizar task:', err);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     void load();
@@ -436,6 +483,17 @@ export function WorkspaceTasks() {
                         marginTop: '1rem',
                       }}
                     >
+                      {(task.status === 'pending' ||
+                        task.status === 'in_progress') && (
+                        <button
+                          className="button button-primary"
+                          onClick={() => openPomodoroModal(task)}
+                          type="button"
+                          style={{ flex: 0 }}
+                        >
+                          ⏱
+                        </button>
+                      )}
                       <button
                         className="button button-secondary"
                         onClick={() => openEditModal(task)}
@@ -465,6 +523,60 @@ export function WorkspaceTasks() {
           ))}
         </div>
       ) : null}
+
+      {/* //pomodoro.tsx as modal */}
+      {showPomodoroModal && selectedTaskForPomodoro && (
+        <div
+          className="modal-overlay"
+          onClick={closeModals}
+          style={{ overflow: 'hidden' }}
+        >
+          <div
+            className="modal"
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: '600px' }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '1rem',
+              }}
+            >
+              <h3 className="modal-title">
+                Pomodoro - {selectedTaskForPomodoro.title}
+              </h3>
+              <button
+                className="button button-ghost"
+                onClick={closeModals}
+                type="button"
+                style={{ padding: '0.25rem 0.5rem' }}
+              >
+                ✕
+              </button>
+            </div>
+            <PomodoroTimer />
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                marginTop: '1rem',
+              }}
+            >
+              <button
+                className="button button-secondary"
+                type="button"
+                onClick={handleFinishTask}
+                disabled={submitting}
+                style={{ display: 'flex' }}
+              >
+                Finish Task
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Create Modal */}
       {showCreateModal && (

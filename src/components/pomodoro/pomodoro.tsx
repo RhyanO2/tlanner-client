@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { Play, Pause, RotateCcw, Settings } from 'lucide-react';
+// import { Play, Pause, RotateCcw, Settings } from 'lucide-react';
+import { FaPlay, FaPause } from 'react-icons/fa';
+import { IoMdSettings } from 'react-icons/io';
+import { FiRotateCcw } from 'react-icons/fi';
 import './pomodoro.css';
 
 interface PomodoroSettings {
@@ -28,7 +31,7 @@ export default function PomodoroTimer() {
   const intervalRef = useRef<number | null>(null);
 
   const modeConfig = {
-    work: { color: '#67f4677a', title: 'Worktime' },
+    work: { color: '#56cb567a', title: 'Worktime' },
     shortBreak: { color: '#006ed48f', title: 'Short Pause' },
     longBreak: { color: '#667eea89', title: 'Long Pause' },
   };
@@ -112,7 +115,7 @@ export default function PomodoroTimer() {
                 className="icon-btn"
                 onClick={() => setShowSettings(!showSettings)}
               >
-                <Settings size={22} />
+                <IoMdSettings size={20} />
               </button>
             </div>
 
@@ -162,17 +165,17 @@ export default function PomodoroTimer() {
                   >
                     {isRunning ? (
                       <>
-                        <Pause size={18} /> Pausar
+                        <FaPause /> Pause
                       </>
                     ) : (
                       <>
-                        <Play size={18} /> Iniciar
+                        <FaPlay /> Start
                       </>
                     )}
                   </button>
 
                   <button className="secondary-btn" onClick={resetTimer}>
-                    <RotateCcw size={18} />
+                    <FiRotateCcw />
                   </button>
                 </div>
 
@@ -190,10 +193,10 @@ export default function PomodoroTimer() {
                         onClick={() => switchMode(m)}
                       >
                         {m === 'work'
-                          ? 'Trabalho'
+                          ? 'Work'
                           : m === 'shortBreak'
-                          ? 'Pausa Curta'
-                          : 'Pausa Longa'}
+                          ? 'Short Break'
+                          : 'Long Break'}
                       </button>
                     )
                   )}
@@ -229,10 +232,13 @@ function SettingsPanel({
   const [local, setLocal] = useState(settings);
 
   const input = (label: string, key: keyof PomodoroSettings) => (
-    <div>
-      <label>{label}</label>
+    <div className="settings-group">
+      <label className="settings-label">{label}</label>
       <input
+        className="settings-input"
         type="number"
+        min="1"
+        max="120"
         value={local[key]}
         onChange={(e) => setLocal({ ...local, [key]: Number(e.target.value) })}
       />
@@ -241,20 +247,24 @@ function SettingsPanel({
 
   return (
     <div>
-      {input('Tempo de Trabalho', 'workMinutes')}
-      {input('Pausa Curta', 'shortBreakMinutes')}
-      {input('Pausa Longa', 'longBreakMinutes')}
-      {input('Sessões até Pausa Longa', 'sessionsUntilLongBreak')}
+      {input('Work Time', 'workMinutes')}
+      {input('Short Break', 'shortBreakMinutes')}
+      {input('long Break', 'longBreakMinutes')}
+      {input('Sessions until Long Break', 'sessionsUntilLongBreak')}
 
       <div className="actions">
         <button
           className="primary-btn"
           onClick={() => onSave(local)}
-          style={{ background: '#fff', color: 'black' }}
+          style={{ background: '#fff', color: 'black', marginTop: '7px' }}
         >
           Salvar
         </button>
-        <button className="secondary-btn" onClick={onClose}>
+        <button
+          className="secondary-btn"
+          onClick={onClose}
+          style={{ marginTop: '7px' }}
+        >
           Cancelar
         </button>
       </div>
