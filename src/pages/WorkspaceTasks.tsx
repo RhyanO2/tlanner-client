@@ -486,10 +486,9 @@ export function WorkspaceTasks() {
                       {(task.status === 'pending' ||
                         task.status === 'in_progress') && (
                         <button
-                          className="button button-primary"
+                          className="button button-primaryEmoji"
                           onClick={() => openPomodoroModal(task)}
                           type="button"
-                          style={{ flex: 0 }}
                         >
                           ⏱
                         </button>
@@ -534,7 +533,7 @@ export function WorkspaceTasks() {
           <div
             className="modal"
             onClick={(e) => e.stopPropagation()}
-            style={{ maxWidth: '600px' }}
+            // style={{ maxWidth: '600px' }}
           >
             <div
               style={{

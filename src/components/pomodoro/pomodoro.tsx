@@ -149,7 +149,7 @@ export default function PomodoroTimer() {
                     <div>
                       <div className="timer-time">{formatTime(timeLeft)}</div>
                       <div className="timer-session">
-                        Sessão {completedSessions + 1}
+                        Session {completedSessions + 1}
                       </div>
                     </div>
                   </div>
@@ -246,7 +246,7 @@ function SettingsPanel({
   );
 
   return (
-    <div>
+    <div className="options-select">
       {input('Work Time', 'workMinutes')}
       {input('Short Break', 'shortBreakMinutes')}
       {input('long Break', 'longBreakMinutes')}
@@ -254,18 +254,18 @@ function SettingsPanel({
 
       <div className="actions">
         <button
-          className="primary-btn"
+          className="save-btn"
           onClick={() => onSave(local)}
           style={{ background: '#fff', color: 'black', marginTop: '7px' }}
         >
-          Salvar
+          Save
         </button>
         <button
-          className="secondary-btn"
+          className="cancel-btn"
           onClick={onClose}
           style={{ marginTop: '7px' }}
         >
-          Cancelar
+          Cancel
         </button>
       </div>
     </div>
