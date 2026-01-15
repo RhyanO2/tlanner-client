@@ -282,7 +282,7 @@ export async function createTaskApi(
   input: {
     title: string;
     description: string;
-    due_date: string;
+    due_date: string | null;
     priority?: TaskPriority;
   }
 ): Promise<CreateTaskResponse> {
@@ -298,7 +298,7 @@ export async function updateTaskApi(
     title: string;
     description: string;
     status: TaskStatus;
-    due_date: string;
+    due_date: string | null;
     priority: TaskPriority;
   }
 ): Promise<MessageResponse> {
