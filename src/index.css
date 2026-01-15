@@ -658,7 +658,18 @@ textarea.input {
       'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   }
 }
-
+.providers {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.button-githubAuth {
+  background-color: #171515;
+}
+.button-githubAuth:hover {
+  background-color: #24292e;
+}
 @media (max-width: 900px) {
   .container {
     width: calc(100% - 32px);

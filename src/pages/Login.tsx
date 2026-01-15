@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { loginApi } from '../lib/api';
+import { githubRegister, loginApi } from '../lib/api';
 import { setToken } from '../lib/auth';
-import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
+import { FaRegEye, FaRegEyeSlash, FaGithub } from 'react-icons/fa';
 
 export function Login() {
   const navigate = useNavigate();
@@ -78,6 +78,15 @@ export function Login() {
             {loading ? 'Signing in…' : 'Sign in'}
           </button>
         </form>
+        <div className="providers">
+          <button
+            className="button button-githubAuth"
+            // disabled={loading}
+            onClick={githubRegister}
+          >
+            <FaGithub size={20} /> Login with GitHub
+          </button>
+        </div>
 
         <div className="auth-footer">
           <span className="muted">No account?</span>

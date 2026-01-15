@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { registerApi } from '../lib/api';
-import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
+import { githubRegister, registerApi } from '../lib/api';
+import { FaRegEye, FaRegEyeSlash, FaGithub } from 'react-icons/fa';
+// import { FaGithub } from "react-icons/fa";
 
 export function Register() {
   const navigate = useNavigate();
@@ -89,6 +90,15 @@ export function Register() {
             {loading ? 'Creating…' : 'Create account'}
           </button>
         </form>
+        <div className="providers">
+          <button
+            className="button button-githubAuth"
+            // disabled={loading}
+            onClick={githubRegister}
+          >
+            <FaGithub size={20} /> Create with GitHub
+          </button>
+        </div>
 
         <div className="auth-footer">
           <span className="muted">Already have an account?</span>
