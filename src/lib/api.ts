@@ -1,6 +1,7 @@
 import { getToken } from './auth';
 
-const DEFAULT_API_BASE_URL = 'https://tlanner-main-1.onrender.com/';
+// const DEFAULT_API_BASE_URL = 'https://tlanner-main-1.onrender.com/';
+const DEFAULT_API_BASE_URL = 'http://localhost:3000/';
 
 export function getApiBaseUrl(): string {
   const envBase = import.meta.env.VITE_API_BASE_URL as string | undefined;
@@ -216,6 +217,10 @@ export async function registerApi(input: {
     method: 'POST',
     body: JSON.stringify(input),
   });
+}
+
+export function githubRegister(): void {
+  window.location.href = `${getApiBaseUrl()}/auth/github`;
 }
 
 // Workspace APIs
