@@ -144,11 +144,10 @@ export function WorkspaceTasks() {
       title: taskTitle.trim(),
       description: taskDescription.trim(),
       status: 'pending',
-      due_date: taskDueDate || new Date().toISOString(),
+      due_date: taskDueDate || null,
       priority: taskPriority,
       id_workspace: workspaceId,
     };
-
     setTasks((current) => [tempTask, ...current]);
 
     setShowCreateModal(false);
@@ -158,7 +157,7 @@ export function WorkspaceTasks() {
       const created = await createTaskApi(tempTask.id_workspace, {
         title: tempTask.title,
         description: tempTask.description,
-        due_date: tempTask.due_date ?? new Date().toISOString(),
+        due_date: tempTask.due_date,
         priority: tempTask.priority,
       });
       setTasks((current) =>
@@ -180,12 +179,7 @@ export function WorkspaceTasks() {
     setError(null);
 
     // Format due_date correctly
-    let dueDate = taskDueDate;
-    if (!dueDate) {
-      dueDate = new Date().toISOString();
-    } else {
-      dueDate = new Date(dueDate).toISOString();
-    }
+    const dueDate = taskDueDate || null;
 
     const previousTask = editingTask;
 
@@ -236,20 +230,7 @@ export function WorkspaceTasks() {
 
     try {
       // Format due_date correctly - use existing date or current date
-      let dueDate: string;
-      if (!task.due_date) {
-        // If no due date, use current date
-        dueDate = new Date().toISOString();
-      } else {
-        // Parse and format the existing date
-        const date = new Date(task.due_date);
-        if (isNaN(date.getTime())) {
-          // Invalid date, use current date
-          dueDate = new Date().toISOString();
-        } else {
-          dueDate = date.toISOString();
-        }
-      }
+      const dueDate = task.due_date || null;
 
       await updateTaskApi(task.id, {
         title: task.title,
@@ -278,13 +259,14 @@ export function WorkspaceTasks() {
 
     setError(null);
 
-    const taskToDelete = tasks.find((t) => (t.id = taskId));
+    const taskToDelete = tasks.find((t) => t.id === taskId);
     if (!taskToDelete) return;
 
     setTasks((current) => current.filter((t) => t.id !== taskId));
 
     try {
       await deleteTaskApi(taskId);
+      // load();
     } catch (err) {
       setTasks((current) => [...current, taskToDelete]);
       setError(err instanceof Error ? err.message : 'Failed to delete task');
@@ -297,9 +279,7 @@ export function WorkspaceTasks() {
     setTaskDescription(task.description);
     setTaskStatus(task.status);
     setTaskPriority(task.priority);
-    setTaskDueDate(
-      task.due_date ? new Date(task.due_date).toISOString().split('T')[0] : ''
-    );
+    setTaskDueDate(task.due_date ?? '');
   }
 
   // function openPomodoroModal(task: Task){
@@ -368,7 +348,7 @@ export function WorkspaceTasks() {
         title: task.title,
         description: task.description,
         status: 'done',
-        due_date: task.due_date || `${new Date()}`,
+        due_date: task.due_date || null,
         priority: task.priority,
       });
 
@@ -467,15 +447,19 @@ export function WorkspaceTasks() {
                       </div>
                     </div>
                     <div className="task-card-desc">{task.description}</div>
-                    {task.due_date && (
-                      <div
-                        className="muted"
-                        style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}
-                      >
-                        Due Date:{' '}
-                        {new Date(task.due_date).toLocaleDateString('en-US')}
-                      </div>
-                    )}
+                    {task.due_date &&
+                      (() => {
+                        const date = new Date(
+                          task.due_date.length === 10
+                            ? `${task.due_date}T12:00:00`
+                            : task.due_date
+                        );
+
+                        if (isNaN(date.getTime())) return '—';
+
+                        return date.toLocaleDateString('en-US');
+                      })()}
+
                     <div
                       style={{
                         display: 'flex',
