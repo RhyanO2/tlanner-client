@@ -5,6 +5,7 @@ const DEFAULT_API_BASE_URL = 'https://tlanner-main-1.onrender.com/';
 
 export function getApiBaseUrl(): string {
   const envBase = import.meta.env.VITE_API_BASE_URL as string | undefined;
+  console.log(envBase);
   return (
     envBase && envBase.trim().length > 0 ? envBase : DEFAULT_API_BASE_URL
   ).replace(/\/$/, '');
