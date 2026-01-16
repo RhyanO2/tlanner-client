@@ -31,9 +31,9 @@ export default function PomodoroTimer() {
   const intervalRef = useRef<number | null>(null);
 
   const modeConfig = {
-    work: { color: '#56cb567a', title: 'Worktime' },
-    shortBreak: { color: '#006ed48f', title: 'Short Pause' },
-    longBreak: { color: '#667eea89', title: 'Long Pause' },
+    work: { color: '#009c007a', title: 'Worktime' },
+    shortBreak: { color: '#006dd4ba', title: 'Short Pause' },
+    longBreak: { color: '#667eeab4', title: 'Long Pause' },
   };
 
   const getModeMinutes = (m: TimerMode) =>
@@ -115,7 +115,7 @@ export default function PomodoroTimer() {
                 className="icon-btn"
                 onClick={() => setShowSettings(!showSettings)}
               >
-                <IoMdSettings size={20} />
+                <IoMdSettings size={23} />
               </button>
             </div>
 
