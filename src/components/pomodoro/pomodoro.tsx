@@ -40,8 +40,8 @@ export default function PomodoroTimer() {
     m === 'work'
       ? settings.workMinutes
       : m === 'shortBreak'
-      ? settings.shortBreakMinutes
-      : settings.longBreakMinutes;
+        ? settings.shortBreakMinutes
+        : settings.longBreakMinutes;
 
   const resetTimer = () => {
     setIsRunning(false);
@@ -63,7 +63,7 @@ export default function PomodoroTimer() {
       switchMode(
         next % settings.sessionsUntilLongBreak === 0
           ? 'longBreak'
-          : 'shortBreak'
+          : 'shortBreak',
       );
     } else {
       switchMode('work');
@@ -91,7 +91,7 @@ export default function PomodoroTimer() {
   const formatTime = (s: number) =>
     `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(
       2,
-      '0'
+      '0',
     )}`;
 
   const progress = (1 - timeLeft / (getModeMinutes(mode) * 60)) * 100;
@@ -165,17 +165,21 @@ export default function PomodoroTimer() {
                   >
                     {isRunning ? (
                       <>
-                        <FaPause /> Pause
+                        <div className="primary-icon-btn">
+                          <FaPause /> Pause
+                        </div>
                       </>
                     ) : (
                       <>
-                        <FaPlay /> Start
+                        <div className="primary-icon-btn">
+                          <FaPlay /> Start
+                        </div>
                       </>
                     )}
                   </button>
 
-                  <button className="secondary-btn" onClick={resetTimer}>
-                    <FiRotateCcw />
+                  <button className="secondary-icon-btn" onClick={resetTimer}>
+                    <FiRotateCcw size={17} />
                   </button>
                 </div>
 
@@ -195,10 +199,10 @@ export default function PomodoroTimer() {
                         {m === 'work'
                           ? 'Work'
                           : m === 'shortBreak'
-                          ? 'Short Break'
-                          : 'Long Break'}
+                            ? 'Short Break'
+                            : 'Long Break'}
                       </button>
-                    )
+                    ),
                   )}
                 </div>
               </>
@@ -256,14 +260,14 @@ function SettingsPanel({
         <button
           className="save-btn"
           onClick={() => onSave(local)}
-          style={{ background: '#fff', color: 'black', marginTop: '7px' }}
+          // style={{ background: '#fff', color: 'black', marginTop: '7px' }}
         >
           Save
         </button>
         <button
           className="cancel-btn"
           onClick={onClose}
-          style={{ marginTop: '7px' }}
+          // style={{ marginTop: '7px' }}
         >
           Cancel
         </button>

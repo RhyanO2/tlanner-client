@@ -1,6 +1,14 @@
 * {
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
-    Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji';
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    Helvetica,
+    Arial,
+    'Apple Color Emoji',
+    'Segoe UI Emoji';
 }
 
 .pomodoro-root {
@@ -80,6 +88,13 @@
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
+.primary-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  gap: 2px;
+}
 
 .primary-btn {
   flex: 1;
@@ -90,7 +105,14 @@
   cursor: pointer;
   color: white;
 }
-.save-btn {
+.primary-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.008);
+  border-color: rgba(255, 255, 255, 0.18);
+  /* color: #fff; */
+}
+
+/* .save-btn {
   flex: 1;
   padding: 1rem;
   border-radius: 16px;
@@ -98,37 +120,82 @@
   border: none;
   cursor: pointer;
   color: white;
-}
-.settings-actions .save-btn {
+} */
+
+.actions .save-btn {
+  flex: 1;
+  padding: 1rem;
+  border-radius: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
   background-color: #fff;
-
   margin-top: 7px;
+  color: black;
+  margin-block: 7px;
+}
+.actions .save-btn:hover {
+  transform: translateY(-1px);
+  /* background: rgba(255, 255, 255, 0.09); */
+  border-color: rgba(255, 255, 255, 0.18);
+  /* color: #fff; */
 }
 
-.secondary-btn {
+.secondary-icon-btn {
+  padding: 0.8rem;
+  border-radius: 16px;
+  background: var(--card-2);
+  border: none;
+  cursor: pointer;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  gap: 2px;
+}
+
+.secondary-icon-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.18);
+  /* color: #fff; */
+}
+/* .cancel-btn {
   padding: 1rem;
   border-radius: 16px;
   background: var(--card-2);
   border: none;
   cursor: pointer;
   color: var(--text);
-}
-.cancel-btn {
+} */
+/* .actions .cancel-btn {
+  flex: 0;
   padding: 1rem;
+  border-radius: 16px;
+  font-weight: 600;
+  cursor: pointer;
   border-radius: 16px;
   background: var(--card-2);
   border: none;
-  cursor: pointer;
-  color: var(--text);
-}
+  margin-top: 7px;
+} */
+
 .actions .cancel-btn {
+  flex: 0;
   padding: 1rem;
   border-radius: 16px;
-  background: var(--card-2);
+  font-weight: 600;
   border: none;
   cursor: pointer;
-  color: var(--text);
+  background: var(--card-2);
   margin-top: 7px;
+  margin-block: 7px;
+}
+.actions .cancel-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .mode-switch {
@@ -143,6 +210,13 @@
   font-size: 0.85rem;
   border: none;
   cursor: pointer;
+}
+
+.mode-btn:hover {
+  transform: translateY(-1px);
+  /* background: rgba(255, 255, 255, 0.09); */
+  border-color: rgba(255, 255, 255, 0.18);
+  /* color: #fff; */
 }
 
 .settings-panel {
@@ -194,7 +268,7 @@
   border-top: 1px solid var(--border);
 }
 
-.settings-actions .primary-btn {
+.actions .primary-btn {
   background: var(--primary-2);
 }
 
@@ -226,9 +300,7 @@
   .timer-session {
     text-align: center;
   }
-  .actions .save-btn {
-    margin-top: -15px;
-  }
+
   .options-select input {
     font-size: small;
   }
