@@ -18,7 +18,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
         <Route element={<ProtectedRoute />}>
-          <Route path="/pomo" element={<PomodoroTimer />} />
+          <Route path="/pomodoro" element={<PomodoroTimer />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/workspace/:workspaceId" element={<WorkspaceTasks />} />
         </Route>
