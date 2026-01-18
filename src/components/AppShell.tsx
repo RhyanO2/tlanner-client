@@ -63,7 +63,7 @@ export function AppShell(props: { children: React.ReactNode }) {
                 <NavLink className="nav-link" to="/dashboard">
                   Dashboard
                 </NavLink>
-                <NavLink className="nav-link" to="/pomo">
+                <NavLink className="nav-link" to="/pomodoro">
                   Pomodoro
                 </NavLink>
                 <button
