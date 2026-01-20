@@ -13,6 +13,7 @@ export function getApiBaseUrl(): string {
 // Types
 export type TaskStatus = 'pending' | 'in_progress' | 'done';
 export type TaskPriority = 'low' | 'normal' | 'high' | 'urgent';
+export type HabitFrequency = 'daily' | 'weekly' | 'monthly';
 
 export type Task = {
   id: string;
@@ -22,6 +23,13 @@ export type Task = {
   status: TaskStatus;
   due_date: string | null;
   id_workspace: string;
+};
+export type Habit = {
+  id: string;
+  name: string;
+  id_user: string;
+  frequency: HabitFrequency;
+  created_at: string | null;
 };
 
 export type Workspace = {
@@ -52,6 +60,10 @@ export type TasksByWorkspaceResponse = {
   workspace: string;
   tasks: Task[];
 };
+export type UserHabitsResponse = {
+  user: string;
+  habits: Habit[];
+};
 
 export type MessageResponse = {
   message: string;
@@ -60,6 +72,9 @@ export type MessageResponse = {
 export type CreateTaskResponse = {
   task: Task;
 };
+export type CreateHabitResponse = {
+  habits: Habit[];
+};
 export type CreateWorkspaceResponse = {
   workspace: Workspace;
 };
@@ -67,7 +82,7 @@ export type CreateWorkspaceResponse = {
 // Base API fetch function
 export async function apiFetch<T>(
   path: string,
-  init?: RequestInit
+  init?: RequestInit,
 ): Promise<T> {
   const token = getToken();
   const url = `${getApiBaseUrl()}${path}`;
@@ -92,7 +107,7 @@ export async function apiFetch<T>(
       errorMessage.includes('NetworkError')
     ) {
       throw new Error(
-        `Network error: Unable to reach ${url}. Check if the server is running and CORS is configured. Original error: ${errorMessage}`
+        `Network error: Unable to reach ${url}. Check if the server is running and CORS is configured. Original error: ${errorMessage}`,
       );
     }
     throw fetchError;
@@ -133,7 +148,7 @@ export async function apiFetch<T>(
 // Delete API fetch function
 export async function apiFetchDelete<T>(
   path: string,
-  init?: RequestInit
+  init?: RequestInit,
 ): Promise<T> {
   const token = getToken();
   const url = `${getApiBaseUrl()}${path}`;
@@ -157,7 +172,7 @@ export async function apiFetchDelete<T>(
       errorMessage.includes('NetworkError')
     ) {
       throw new Error(
-        `Network error: Unable to reach ${url}. Check if the server is running and CORS is configured. Original error: ${errorMessage}`
+        `Network error: Unable to reach ${url}. Check if the server is running and CORS is configured. Original error: ${errorMessage}`,
       );
     }
     throw fetchError;
@@ -225,7 +240,7 @@ export function githubRegister(): void {
 
 // Workspace APIs
 export async function getUserWorkspacesApi(
-  userId: string
+  userId: string,
 ): Promise<UserWorkspacesResponse> {
   return apiFetch<UserWorkspacesResponse>(`/user/${userId}/workspaces`, {
     method: 'GET',
@@ -233,7 +248,7 @@ export async function getUserWorkspacesApi(
 }
 
 export async function getWorkspaceApi(
-  workspaceId: string
+  workspaceId: string,
 ): Promise<WorkspaceResponse> {
   return apiFetch<WorkspaceResponse>(`/workspace/${workspaceId}`, {
     method: 'GET',
@@ -252,7 +267,7 @@ export async function createWorkspaceApi(input: {
 
 export async function updateWorkspaceApi(
   workspaceId: string,
-  input: { title: string }
+  input: { title: string },
 ): Promise<MessageResponse> {
   return apiFetch<MessageResponse>(`/workspace/${workspaceId}`, {
     method: 'PUT',
@@ -261,56 +276,49 @@ export async function updateWorkspaceApi(
 }
 
 export async function deleteWorkspaceApi(
-  workspaceId: string
+  workspaceId: string,
 ): Promise<MessageResponse> {
   return apiFetchDelete<MessageResponse>(`/workspace/${workspaceId}`, {
     method: 'DELETE',
   });
 }
 
-// Task APIs
-export async function getTasksByWorkspaceApi(
-  workspaceId: string
-): Promise<TasksByWorkspaceResponse> {
-  return apiFetch<TasksByWorkspaceResponse>(`/workspace/${workspaceId}/tasks`, {
+// Habits APIs
+export async function getHabitsByUserIdApi(
+  userID: string,
+): Promise<UserHabitsResponse> {
+  return apiFetch<UserHabitsResponse>(`/user/${userID}/habits`, {
     method: 'GET',
   });
 }
 
-export async function createTaskApi(
-  workspaceId: string,
-  input: {
-    title: string;
-    description: string;
-    due_date: string | null;
-    priority?: TaskPriority;
-  }
-): Promise<CreateTaskResponse> {
-  return apiFetch<CreateTaskResponse>(`/workspace/${workspaceId}/tasks`, {
+export async function createHabitApi(input: {
+  name: string;
+  priority?: HabitFrequency;
+  userID: string;
+}): Promise<CreateHabitResponse> {
+  return apiFetch<CreateHabitResponse>(`/habit`, {
     method: 'POST',
     body: JSON.stringify(input),
   });
 }
 
-export async function updateTaskApi(
-  taskId: string,
+export async function updateHabitApi(
+  habitID: string,
   input: {
-    title: string;
-    description: string;
-    status: TaskStatus;
-    due_date: string | null;
-    priority: TaskPriority;
-  }
+    name: string;
+    priority?: HabitFrequency;
+  },
 ): Promise<MessageResponse> {
   try {
-    return await apiFetch<MessageResponse>(`/task/${taskId}`, {
+    return await apiFetch<MessageResponse>(`habit/${habitID}`, {
       method: 'PUT',
       body: JSON.stringify(input),
     });
   } catch (err) {
     // Log the error for debugging
     console.error('updateTaskApi error:', {
-      taskId,
+      habitID,
       input,
       error: err,
     });
@@ -318,9 +326,13 @@ export async function updateTaskApi(
   }
 }
 
-export async function deleteTaskApi(taskId: string): Promise<MessageResponse> {
-  return apiFetchDelete<MessageResponse>(`/task/${taskId}`, {
+export async function deleteHabitApi(
+  habitID: string,
+): Promise<MessageResponse> {
+  return apiFetchDelete<MessageResponse>(`/habit/${habitID}`, {
     method: 'DELETE',
     headers: {},
   });
 }
+
+//
