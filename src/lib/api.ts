@@ -79,6 +79,16 @@ export type CreateWorkspaceResponse = {
   workspace: Workspace;
 };
 
+export function normalizeTask(task: any): Task {
+  return {
+    ...task,
+    due_date: task.due_date ? 
+      (typeof task.due_date === 'string' ? task.due_date : new Date(task.due_date).toISOString()) 
+      : null
+  };
+}
+
+
 // Base API fetch function
 export async function apiFetch<T>(
   path: string,
@@ -289,9 +299,19 @@ export async function deleteWorkspaceApi(
 export async function getTasksByWorkspaceApi(
   workspaceId: string,
 ): Promise<TasksByWorkspaceResponse> {
-  return apiFetch<TasksByWorkspaceResponse>(`/workspace/${workspaceId}/tasks`, {
-    method: 'GET',
-  });
+  const response = await apiFetch<any>(
+    `/workspace/${workspaceId}/tasks`, 
+    { method: 'GET' }
+  );
+  
+  // Normalize as tasks antes de retornar
+  return {
+    workspace: response.workspace,
+    tasks: response.tasks.map((task: any) => ({
+      ...task,
+      due_date: task.due_date ? String(task.due_date).split('T')[0] : null
+    }))
+  };
 }
 
 export async function createTaskApi(
