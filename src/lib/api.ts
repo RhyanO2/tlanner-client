@@ -283,6 +283,65 @@ export async function deleteWorkspaceApi(
   });
 }
 
+//Tasks APIs
+
+// Task APIs
+export async function getTasksByWorkspaceApi(
+  workspaceId: string,
+): Promise<TasksByWorkspaceResponse> {
+  return apiFetch<TasksByWorkspaceResponse>(`/workspace/${workspaceId}/tasks`, {
+    method: 'GET',
+  });
+}
+
+export async function createTaskApi(
+  workspaceId: string,
+  input: {
+    title: string;
+    description: string;
+    due_date: string | null;
+    priority?: TaskPriority;
+  },
+): Promise<CreateTaskResponse> {
+  return apiFetch<CreateTaskResponse>(`/workspace/${workspaceId}/tasks`, {
+    method: 'POST',
+    body: JSON.stringify(input),
+  });
+}
+
+export async function updateTaskApi(
+  taskId: string,
+  input: {
+    title: string;
+    description: string;
+    status: TaskStatus;
+    due_date: string | null;
+    priority: TaskPriority;
+  },
+): Promise<MessageResponse> {
+  try {
+    return await apiFetch<MessageResponse>(`/task/${taskId}`, {
+      method: 'PUT',
+      body: JSON.stringify(input),
+    });
+  } catch (err) {
+    // Log the error for debugging
+    console.error('updateTaskApi error:', {
+      taskId,
+      input,
+      error: err,
+    });
+    throw err;
+  }
+}
+
+export async function deleteTaskApi(taskId: string): Promise<MessageResponse> {
+  return apiFetchDelete<MessageResponse>(`/task/${taskId}`, {
+    method: 'DELETE',
+    headers: {},
+  });
+}
+
 // Habits APIs
 export async function getHabitsByUserIdApi(
   userID: string,
