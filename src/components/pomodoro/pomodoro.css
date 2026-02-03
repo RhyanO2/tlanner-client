@@ -36,9 +36,7 @@
 .pomodoro-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   margin-bottom: 2rem;
-  margin-right: 0.5rem;
 }
 
 .pomodoro-title {
@@ -53,6 +51,7 @@
   background: transparent;
   border: none;
   cursor: pointer;
+  gap: 5px;
 }
 
 .icon-btn:hover {

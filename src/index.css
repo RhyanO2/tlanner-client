@@ -25,12 +25,21 @@ body {
   --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
 
   color-scheme: dark;
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
-    Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji';
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    Helvetica,
+    Arial,
+    'Apple Color Emoji',
+    'Segoe UI Emoji';
   line-height: 1.5;
   font-weight: 400;
   color: var(--text);
-  background: radial-gradient(
+  background:
+    radial-gradient(
       1200px 700px at 10% 10%,
       rgba(109, 94, 252, 0.35),
       transparent 60%
@@ -165,7 +174,9 @@ a {
   background: rgba(255, 255, 255, 0.06);
   color: var(--text);
   cursor: pointer;
-  transition: transform 0.12s ease, background 0.12s ease,
+  transition:
+    transform 0.12s ease,
+    background 0.12s ease,
     border-color 0.12s ease;
 }
 
@@ -203,12 +214,12 @@ a {
 }
 
 .button-finish {
-  background: linear-gradient(100deg, var(--info-dark));
+  background: linear-gradient(135deg, var(--primary-2));
   border-color: rgba(255, 255, 255, 0.12);
 }
 .button-finish:hover {
   transform: translateY(-1px);
-  background: linear-gradient(100deg, var(--info-dark), var(--success-dark));
+  background: linear-gradient(135deg, var(--primary-2), var(--primary));
   border-color: rgba(255, 255, 255, 0.18);
 }
 
@@ -570,7 +581,9 @@ a {
 
 .task-card.draggable {
   cursor: grab;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .task-card.draggable:active {
@@ -654,7 +667,8 @@ textarea.input {
   }
   .button-finish {
     flex: 1;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+    font-family:
+      'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
       'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   }
 }
