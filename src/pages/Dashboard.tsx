@@ -14,7 +14,7 @@ export function Dashboard() {
   const token = getToken();
   const userId = useMemo(
     () => (token ? getUserIdFromToken(token) : null),
-    [token]
+    [token],
   );
 
   const [loading, setLoading] = useState(true);
@@ -22,7 +22,7 @@ export function Dashboard() {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingWorkspace, setEditingWorkspace] = useState<Workspace | null>(
-    null
+    null,
   );
   const [workspaceTitle, setWorkspaceTitle] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -88,7 +88,7 @@ export function Dashboard() {
       setWorkspaces(res.workspaces);
     } catch (err) {
       setWorkspaces((current) =>
-        current.filter((w) => w.id !== tempWorkspace.id)
+        current.filter((w) => w.id !== tempWorkspace.id),
       );
 
       if (err instanceof Error && err.message.includes('401')) {
@@ -98,7 +98,7 @@ export function Dashboard() {
       }
 
       setError(
-        err instanceof Error ? err.message : 'Failed to create workspace'
+        err instanceof Error ? err.message : 'Failed to create workspace',
       );
     }
   }
@@ -118,8 +118,8 @@ export function Dashboard() {
 
     setWorkspaces((current) =>
       current.map((w) =>
-        w.id === editingWorkspace.id ? optimisticWorkspace : w
-      )
+        w.id === editingWorkspace.id ? optimisticWorkspace : w,
+      ),
     );
 
     setEditingWorkspace(null);
@@ -133,8 +133,8 @@ export function Dashboard() {
     } catch (err) {
       setWorkspaces((current) =>
         current.map((w) =>
-          w.id === previousWorkspace.id ? previousWorkspace : w
-        )
+          w.id === previousWorkspace.id ? previousWorkspace : w,
+        ),
       );
 
       // Se erro 401, redireciona para login
@@ -145,7 +145,7 @@ export function Dashboard() {
       }
 
       setError(
-        err instanceof Error ? err.message : 'Failed to update workspace'
+        err instanceof Error ? err.message : 'Failed to update workspace',
       );
     }
   }
@@ -153,7 +153,7 @@ export function Dashboard() {
   async function handleDelete(workspaceId: string) {
     if (
       !confirm(
-        'Are you sure you want to delete this workspace? All tasks will be deleted.'
+        'Are you sure you want to delete this workspace? All tasks will be deleted.',
       )
     ) {
       return;
@@ -179,7 +179,7 @@ export function Dashboard() {
       }
 
       setError(
-        err instanceof Error ? err.message : 'Failed to delete workspace'
+        err instanceof Error ? err.message : 'Failed to delete workspace',
       );
     }
   }
@@ -242,7 +242,11 @@ export function Dashboard() {
                   {workspace.title}
                 </div>
               </div>
-              <div className="task-card-desc" style={{ marginBottom: '1rem' }}>
+              <div
+                className="task-card-desc"
+                style={{ marginBottom: '1rem' }}
+                onClick={() => navigate(`/workspace/${workspace.id}`)}
+              >
                 Click to manage tasks
               </div>
               <div style={{ display: 'flex', gap: '0.5rem' }}>

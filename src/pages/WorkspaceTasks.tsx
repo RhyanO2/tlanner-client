@@ -12,6 +12,7 @@ import {
 } from '../lib/api';
 import { clearToken, getToken, getUserIdFromToken } from '../lib/auth';
 import PomodoroTimer from '../components/pomodoro/pomodoro';
+import { LuAlarmClockCheck } from 'react-icons/lu';
 
 // function statusLabel(status: TaskStatus) {
 //   if (status === 'pending') return 'Pending';
@@ -51,7 +52,7 @@ function getPriorityOrder(priority: TaskPriority): number {
 }
 
 function organizeTasksByStatusAndPriority(
-  tasks: Task[]
+  tasks: Task[],
 ): Record<TaskStatus, Task[]> {
   const organized: Record<TaskStatus, Task[]> = {
     pending: [],
@@ -79,7 +80,7 @@ export function WorkspaceTasks() {
   const token = getToken();
   const userId = useMemo(
     () => (token ? getUserIdFromToken(token) : null),
-    [token]
+    [token],
   );
 
   const [loading, setLoading] = useState(true);
@@ -104,7 +105,7 @@ export function WorkspaceTasks() {
 
   const organizedTasks = useMemo(
     () => organizeTasksByStatusAndPriority(tasks),
-    [tasks]
+    [tasks],
   );
 
   async function load() {
@@ -161,7 +162,7 @@ export function WorkspaceTasks() {
         priority: tempTask.priority,
       });
       setTasks((current) =>
-        current.map((t) => (t.id === tempTask.id ? created.task : t))
+        current.map((t) => (t.id === tempTask.id ? created.task : t)),
       );
     } catch (err) {
       setTasks((current) => current.filter((t) => t.id !== tempTask.id));
@@ -193,7 +194,7 @@ export function WorkspaceTasks() {
     };
 
     setTasks((current) =>
-      current.map((t) => (t.id === editingTask.id ? optimisticTask : t))
+      current.map((t) => (t.id === editingTask.id ? optimisticTask : t)),
     );
 
     setEditingTask(null);
@@ -211,7 +212,7 @@ export function WorkspaceTasks() {
       });
     } catch (err) {
       setTasks((current) =>
-        current.map((t) => (t.id === previousTask.id ? previousTask : t))
+        current.map((t) => (t.id === previousTask.id ? previousTask : t)),
       );
       setError(err instanceof Error ? err.message : 'Failed to update task');
     }
@@ -225,7 +226,7 @@ export function WorkspaceTasks() {
     const previousStatus = task.status;
 
     setTasks((current) =>
-      current.map((t) => (t.id === task.id ? { ...t, status: newStatus } : t))
+      current.map((t) => (t.id === task.id ? { ...t, status: newStatus } : t)),
     );
 
     try {
@@ -242,8 +243,8 @@ export function WorkspaceTasks() {
     } catch (err) {
       setTasks((current) =>
         current.map((t) =>
-          t.id === task.id ? { ...t, status: previousStatus } : t
-        )
+          t.id === task.id ? { ...t, status: previousStatus } : t,
+        ),
       );
       const errorMessage =
         err instanceof Error ? err.message : 'Failed to update task status';
@@ -356,8 +357,8 @@ export function WorkspaceTasks() {
         tasks.map((task) =>
           task.id === selectedTaskForPomodoro.id
             ? { ...task, status: 'done' }
-            : task
-        )
+            : task,
+        ),
       );
 
       closeModals();
@@ -452,7 +453,7 @@ export function WorkspaceTasks() {
                         const date = new Date(
                           task.due_date.length === 10
                             ? `${task.due_date}T12:00:00`
-                            : task.due_date
+                            : task.due_date,
                         );
 
                         if (isNaN(date.getTime())) return '—';
@@ -474,7 +475,7 @@ export function WorkspaceTasks() {
                           onClick={() => openPomodoroModal(task)}
                           type="button"
                         >
-                          ⏱
+                          <LuAlarmClockCheck color="#ffffff" />
                         </button>
                       )}
                       <button

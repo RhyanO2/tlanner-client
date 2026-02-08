@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 
+
 export function Landing() {
   return (
     <div className="container">
@@ -13,6 +14,9 @@ export function Landing() {
             A fast, minimal and secure task manager. Perfect for work, study and
             daily planning
           </p>
+          {/* <p className="hero-subtitle">
+            many workspaces to manage your obligations,
+          </p> */}
           <div className="hero-cta">
             <Link className="button button-primary" to="/register">
               Create account
@@ -62,9 +66,6 @@ export function Landing() {
             <div className="task task-done">
               <div className="task-title">Ship dashboard UI</div>
               <div className="pill pill-done">done</div>
-            </div>
-            <div className="card-footer muted">
-              Connect to your Tlanner API and manage your tasks.
             </div>
           </div>
         </div>

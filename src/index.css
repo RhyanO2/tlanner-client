@@ -347,13 +347,13 @@ a {
 }
 
 .pill-pending {
-  background: rgba(245, 159, 11, 0.361);
-  border-color: rgba(245, 158, 11, 0.35);
+  background: #fc530552;
+  border-color: #ff6d25c1;
 }
 
 .pill-progress {
-  background: rgba(109, 94, 252, 0.361);
-  border-color: rgba(109, 94, 252, 0.35);
+  background: #f2e01884;
+  border-color: #f2e018e1;
 }
 
 .pill-done {
@@ -519,6 +519,7 @@ a {
   color: var(--muted);
   font-size: 14px;
   white-space: pre-wrap;
+  cursor: pointer;
 }
 
 .kanban-board {
