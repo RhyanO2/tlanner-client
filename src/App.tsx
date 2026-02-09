@@ -8,6 +8,7 @@ import { Register } from './pages/Register';
 import { WorkspaceTasks } from './pages/WorkspaceTasks';
 import PomodoroTimer from './components/pomodoro/pomodoro';
 import { AuthCallback } from './pages/AuthCallback';
+import { HabitTracker } from './pages/HabitTracker';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/pomodoro" element={<PomodoroTimer />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/workspace/:workspaceId" element={<WorkspaceTasks />} />
+          <Route path="/habittracker" element={<HabitTracker />} />
         </Route>
       </Routes>
     </AppShell>
