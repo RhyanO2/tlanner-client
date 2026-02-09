@@ -1,7 +1,7 @@
 import { getToken } from './auth';
 
-const DEFAULT_API_BASE_URL = 'https://tlanner-main-1.onrender.com/';
-// const DEFAULT_API_BASE_URL = 'http://localhost:3000/';
+// const DEFAULT_API_BASE_URL = 'https://tlanner-main-1.onrender.com/';
+const DEFAULT_API_BASE_URL = 'http://localhost:3000/';
 
 export function getApiBaseUrl(): string {
   const envBase = import.meta.env.VITE_API_BASE_URL as string | undefined;
@@ -390,7 +390,7 @@ export async function updateHabitApi(
   },
 ): Promise<MessageResponse> {
   try {
-    return await apiFetch<MessageResponse>(`habit/${habitID}`, {
+    return await apiFetch<MessageResponse>(`/habit/${habitID}`, {
       method: 'PUT',
       body: JSON.stringify(input),
     });
