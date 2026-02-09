@@ -20,6 +20,7 @@ body {
   --success-dark: #047857;
   --info-dark: #1e40af;
   --success: #22c55e;
+  --success-dark: #19a50c;
   --warning: #f59e0b;
   --radius: 14px;
   --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
@@ -41,12 +42,12 @@ body {
   background:
     radial-gradient(
       1200px 700px at 10% 10%,
-      rgba(109, 94, 252, 0.35),
+      rgba(22, 17, 66, 0.35),
       transparent 60%
     ),
     radial-gradient(
       900px 600px at 70% 0%,
-      rgba(139, 92, 246, 0.25),
+      rgba(53, 33, 101, 0.25),
       transparent 55%
     ),
     var(--bg);
@@ -310,6 +311,14 @@ a {
   pointer-events: none;
 }
 
+.cardHabit {
+  border-radius: var(--radius);
+  /* border: 1px solid var(--border); */
+  background: (var(--bg-2));
+  box-shadow: 5px;
+  padding: 18px;
+}
+
 .card > * {
   position: relative;
 }
@@ -427,6 +436,12 @@ a {
 }
 
 .form {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.cardHabit form {
   margin-top: 16px;
   display: flex;
   flex-direction: column;
