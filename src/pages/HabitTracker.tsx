@@ -128,7 +128,7 @@ export function HabitTracker() {
         id_user: tempHabit.id_user,
       });
       setHabits((current) =>
-        current.map((t) => (t.id === tempHabit.id ? created.habits : t)),
+        current.map((t) => (t.id === tempHabit.id ? created.habits[0] : t)),
       );
     } catch (err) {
       setHabits((current) => current.filter((t) => t.id !== tempHabit.id));
