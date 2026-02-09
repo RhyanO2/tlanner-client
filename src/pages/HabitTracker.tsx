@@ -83,7 +83,7 @@ export function HabitTracker() {
   async function loadData() {
     if (!userId) {
       clearToken();
-      navigate('login', { replace: true });
+      navigate('/login', { replace: true });
       return;
     }
 
@@ -127,10 +127,23 @@ export function HabitTracker() {
         frequency: tempHabit.frequency,
         id_user: tempHabit.id_user,
       });
+
+      // Validate response
+      if (
+        !created ||
+        !created.habits ||
+        !Array.isArray(created.habits) ||
+        created.habits.length === 0
+      ) {
+        throw new Error('Invalid response format from server');
+      }
+
+      const newHabit = created.habits[0];
       setHabits((current) =>
-        current.map((t) => (t.id === tempHabit.id ? created.habits[0] : t)),
+        current.map((t) => (t.id === tempHabit.id ? newHabit : t)),
       );
     } catch (err) {
+      console.error('Error creating habit:', err);
       setHabits((current) => current.filter((t) => t.id !== tempHabit.id));
       setError(err instanceof Error ? err.message : 'Failed to create habit');
     } finally {
@@ -378,20 +391,20 @@ export function HabitTracker() {
                           />
                         </label>
                         <label className="field">
-                          <span className="field-label">Frequency</span>
-                          <select
-                            value={habitFrequency}
+                          {/* <span className="field-label">Frequency</span> */}
+                          {/* <select
+                            value={'daily'}
                             onChange={(e) =>
                               setHabitFrequency(
                                 e.target.value as HabitFrequency,
                               )
                             }
                             className="input"
-                          >
-                            <option value="daily">Daily</option>
-                            <option value="weekly">Weekly</option>
-                            <option value="monthly">Monthly</option>
-                          </select>
+                          > */}
+                          {/* <option value="daily">Daily</option> */}
+                          {/* <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option> */}
+                          {/* </select> */}
                         </label>
                         <div
                           style={{

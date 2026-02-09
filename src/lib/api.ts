@@ -390,7 +390,7 @@ export async function updateHabitApi(
   },
 ): Promise<MessageResponse> {
   try {
-    return await apiFetch<MessageResponse>(`habit/${habitID}`, {
+    return await apiFetch<MessageResponse>(`/habit/${habitID}`, {
       method: 'PUT',
       body: JSON.stringify(input),
     });
