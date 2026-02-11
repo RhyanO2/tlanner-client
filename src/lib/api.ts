@@ -108,31 +108,24 @@ export async function apiFetch<T>(
     },
   });
 
-  // 1. TRATAMENTO PARA 204 NO CONTENT (Não tenta ler JSON)
-  if (res.status === 204) {
-    return {} as T;
-  }
+  if (res.status === 204) return {} as T;
 
-  // 2. TRATAMENTO DE ERROS (4xx e 5xx)
+  // Lemos o corpo uma única vez aqui
+  const isJson = res.headers.get('content-type')?.includes('application/json');
+  const data = isJson ? await res.json() : await res.text();
+
   if (!res.ok) {
-    let errorMessage = `Request failed (${res.status})`;
-
-    try {
-      const data = await res.json();
-      errorMessage = data.message || data.error || errorMessage;
-    } catch {
-      // Se falhar ao ler JSON, tenta ler como texto
-      const text = await res.text().catch(() => '');
-      if (text) errorMessage = text;
-    }
+    // Se data for objeto, usa message/error, se for string, usa ela mesma
+    const errorMessage =
+      typeof data === 'object'
+        ? data.message || data.error || `Error ${res.status}`
+        : data || `Request failed (${res.status})`;
 
     throw new Error(errorMessage);
   }
 
-  // 3. RETORNO DE SUCESSO (Status 200, 201, etc)
-  return (await res.json()) as T;
+  return data as T;
 }
-
 // Delete API fetch function
 export async function apiFetchDelete<T>(
   path: string,
