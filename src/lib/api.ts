@@ -99,7 +99,7 @@ export async function apiFetch<T>(
   const token = getToken();
   const url = `${getApiBaseUrl()}${path}`;
 
-  // 1. Faz a requisição (Removido o try/catch redundante)
+  // Removemos o try/catch redundante para evitar o aviso de "Unnecessary wrapper"
   const res = await fetch(url, {
     ...init,
     headers: {
@@ -109,16 +109,17 @@ export async function apiFetch<T>(
     },
   });
 
-  // 2. Tratamento para 204 No Content (Obrigatório para seus Deletes)
+  // RESOLVE O ERRO DA IMAGEM 2: Se for 204 (No Content), retorna vazio sem tentar ler JSON
   if (res.status === 204) {
     return {} as T;
   }
 
-  // 3. Lê o corpo apenas UMA vez para evitar erro de stream
-  const isJson = res.headers.get('content-type')?.includes('application/json');
+  // Captura o corpo da resposta apenas UMA vez
+  const contentType = res.headers.get('content-type');
+  const isJson = contentType && contentType.includes('application/json');
   const data = isJson ? await res.json() : await res.text();
 
-  // 4. Tratamento de Erro (Definindo variáveis corretamente para o TS)
+  // RESOLVE O ERRO DA IMAGEM 1: Tratamento de erro com variável message definida
   if (!res.ok) {
     let errorMessage = `Request failed (${res.status})`;
 
@@ -131,7 +132,6 @@ export async function apiFetch<T>(
     throw new Error(errorMessage);
   }
 
-  // 5. Sucesso
   return data as T;
 }
 // Delete API fetch function
@@ -188,9 +188,11 @@ export async function registerApi(input: {
 }
 
 export function githubRegister(): void {
-  window.location.href = `${getApiBaseUrl()}/auth/github`;
+  // NÃO use a URL do github.com aqui.
+  // Chame a rota do seu PRÓPRIO backend que inicia o processo.
+  const baseUrl = getApiBaseUrl();
+  window.location.href = `${baseUrl}/auth/github`;
 }
-
 // Workspace APIs
 export async function getUserWorkspacesApi(
   userId: string,
