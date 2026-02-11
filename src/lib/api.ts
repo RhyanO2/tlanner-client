@@ -91,6 +91,7 @@ export function normalizeTask(task: any): Task {
 }
 
 // Base API fetch function
+// Base API fetch function
 export async function apiFetch<T>(
   path: string,
   init?: RequestInit,
@@ -107,34 +108,31 @@ export async function apiFetch<T>(
     },
   });
 
-  // 1. TRATAMENTO PARA 204 NO CONTENT
+  // 1. TRATAMENTO PARA 204 NO CONTENT (Não tenta ler JSON)
   if (res.status === 204) {
     return {} as T;
   }
 
-  // 2. TRATAMENTO DE ERROS DA API
+  // 2. TRATAMENTO DE ERROS (4xx e 5xx)
   if (!res.ok) {
-    let message = `Request failed (${res.status})`;
+    let errorMessage = `Request failed (${res.status})`;
 
     try {
       const data = await res.json();
-      message = data.message || data.error || message;
+      errorMessage = data.message || data.error || errorMessage;
     } catch {
-      // Se não for JSON, tenta pegar como texto simples
-      try {
-        const text = await res.text();
-        if (text) message = text;
-      } catch {
-        /* mantém o default */
-      }
+      // Se falhar ao ler JSON, tenta ler como texto
+      const text = await res.text().catch(() => '');
+      if (text) errorMessage = text;
     }
 
-    throw new Error(message); // Agora 'message' está definida!
+    throw new Error(errorMessage);
   }
 
-  // 3. RETORNO DE SUCESSO
+  // 3. RETORNO DE SUCESSO (Status 200, 201, etc)
   return (await res.json()) as T;
 }
+
 // Delete API fetch function
 export async function apiFetchDelete<T>(
   path: string,
@@ -145,19 +143,20 @@ export async function apiFetchDelete<T>(
 
   const res = await fetch(url, {
     ...init,
-    method: 'DELETE',
+    method: 'DELETE', // Força o método DELETE
     headers: {
       ...(token ? { Authorization: token } : {}),
       ...(init?.headers ?? {}),
     },
   });
 
+  // Tratamento específico para o 204 no DELETE
   if (res.status === 204) {
+    // Retorna um objeto que satisfaça o tipo esperado (ex: MessageResponse)
     return { message: 'Deleted successfully' } as unknown as T;
   }
 
   if (!res.ok) {
-    // Mesma lógica de extração de 'message' acima...
     const data = await res.json().catch(() => ({}));
     throw new Error(data.message || `Delete failed (${res.status})`);
   }
