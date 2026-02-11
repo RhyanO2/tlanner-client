@@ -91,7 +91,6 @@ export function normalizeTask(task: any): Task {
 }
 
 // Base API fetch function
-// Base API fetch function
 export async function apiFetch<T>(
   path: string,
   init?: RequestInit,
@@ -99,7 +98,7 @@ export async function apiFetch<T>(
   const token = getToken();
   const url = `${getApiBaseUrl()}${path}`;
 
-  // Removemos o try/catch redundante para evitar o aviso de "Unnecessary wrapper"
+  // Sem try/catch externo para evitar o aviso de "Unnecessary wrapper"
   const res = await fetch(url, {
     ...init,
     headers: {
@@ -109,17 +108,16 @@ export async function apiFetch<T>(
     },
   });
 
-  // RESOLVE O ERRO DA IMAGEM 2: Se for 204 (No Content), retorna vazio sem tentar ler JSON
+  // RESOLVE IMAGEM 2: Se deletou (204), não tenta ler JSON
   if (res.status === 204) {
     return {} as T;
   }
 
-  // Captura o corpo da resposta apenas UMA vez
   const contentType = res.headers.get('content-type');
   const isJson = contentType && contentType.includes('application/json');
   const data = isJson ? await res.json() : await res.text();
 
-  // RESOLVE O ERRO DA IMAGEM 1: Tratamento de erro com variável message definida
+  // RESOLVE IMAGEM 1: Erros tratados com variável definida
   if (!res.ok) {
     let errorMessage = `Request failed (${res.status})`;
 
@@ -188,9 +186,8 @@ export async function registerApi(input: {
 }
 
 export function githubRegister(): void {
-  // NÃO use a URL do github.com aqui.
-  // Chame a rota do seu PRÓPRIO backend que inicia o processo.
   const baseUrl = getApiBaseUrl();
+  // Agora apontamos para /auth/github (a rota que você acabou de criar)
   window.location.href = `${baseUrl}/auth/github`;
 }
 // Workspace APIs
