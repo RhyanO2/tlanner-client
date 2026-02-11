@@ -99,6 +99,7 @@ export async function apiFetch<T>(
   const token = getToken();
   const url = `${getApiBaseUrl()}${path}`;
 
+  // 1. Faz a requisição (Removido o try/catch redundante)
   const res = await fetch(url, {
     ...init,
     headers: {
@@ -108,22 +109,29 @@ export async function apiFetch<T>(
     },
   });
 
-  if (res.status === 204) return {} as T;
+  // 2. Tratamento para 204 No Content (Obrigatório para seus Deletes)
+  if (res.status === 204) {
+    return {} as T;
+  }
 
-  // Lemos o corpo uma única vez aqui
+  // 3. Lê o corpo apenas UMA vez para evitar erro de stream
   const isJson = res.headers.get('content-type')?.includes('application/json');
   const data = isJson ? await res.json() : await res.text();
 
+  // 4. Tratamento de Erro (Definindo variáveis corretamente para o TS)
   if (!res.ok) {
-    // Se data for objeto, usa message/error, se for string, usa ela mesma
-    const errorMessage =
-      typeof data === 'object'
-        ? data.message || data.error || `Error ${res.status}`
-        : data || `Request failed (${res.status})`;
+    let errorMessage = `Request failed (${res.status})`;
+
+    if (typeof data === 'object' && data !== null) {
+      errorMessage = data.message || data.error || errorMessage;
+    } else if (typeof data === 'string' && data.length > 0) {
+      errorMessage = data;
+    }
 
     throw new Error(errorMessage);
   }
 
+  // 5. Sucesso
   return data as T;
 }
 // Delete API fetch function
