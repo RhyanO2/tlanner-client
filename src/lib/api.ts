@@ -91,6 +91,7 @@ export function normalizeTask(task: any): Task {
 }
 
 // Base API fetch function
+// Base API fetch function
 export async function apiFetch<T>(
   path: string,
   init?: RequestInit,
@@ -98,64 +99,40 @@ export async function apiFetch<T>(
   const token = getToken();
   const url = `${getApiBaseUrl()}${path}`;
 
-  let res: Response;
-  try {
-    res = await fetch(url, {
-      ...init,
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token ? { Authorization: token } : {}),
-        ...(init?.headers ?? {}),
-      },
-    });
-  } catch (fetchError) {
-    // This is a true network error (CORS, connection refused, etc.)
-    const errorMessage =
-      fetchError instanceof Error ? fetchError.message : String(fetchError);
-    if (
-      errorMessage.includes('fetch') ||
-      errorMessage.includes('Failed to fetch') ||
-      errorMessage.includes('NetworkError')
-    ) {
-      throw new Error(
-        `Network error: Unable to reach ${url}. Check if the server is running and CORS is configured. Original error: ${errorMessage}`,
-      );
-    }
-    throw fetchError;
+  const res = await fetch(url, {
+    ...init,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: token } : {}),
+      ...(init?.headers ?? {}),
+    },
+  });
+
+  // 1. TRATAMENTO PARA 204 NO CONTENT (Não tenta ler JSON)
+  if (res.status === 204) {
+    return {} as T;
   }
 
+  // 2. TRATAMENTO DE ERROS (4xx e 5xx)
   if (!res.ok) {
-    let message = `Request failed (${res.status})`;
+    let errorMessage = `Request failed (${res.status})`;
+
     try {
-      const data = (await res.json()) as {
-        message?: string;
-        error?: string;
-        issues?: Array<{ path: string[]; message: string }>;
-      };
-      if (data?.message) {
-        message = data.message;
-      } else if (data?.error) {
-        message = data.error;
-      } else if (data?.issues && Array.isArray(data.issues)) {
-        // Zod validation errors
-        message = `Validation error: ${data.issues
-          .map((issue) => `${issue.path.join('.')}: ${issue.message}`)
-          .join(', ')}`;
-      }
+      const data = await res.json();
+      errorMessage = data.message || data.error || errorMessage;
     } catch {
-      // If response is not JSON, try to get text
-      try {
-        const text = await res.text();
-        if (text) message = text;
-      } catch {
-        // ignore
-      }
+      // Se falhar ao ler JSON, tenta ler como texto
+      const text = await res.text().catch(() => '');
+      if (text) errorMessage = text;
     }
-    throw new Error(message);
+
+    throw new Error(errorMessage);
   }
 
+  // 3. RETORNO DE SUCESSO (Status 200, 201, etc)
   return (await res.json()) as T;
 }
+
 // Delete API fetch function
 export async function apiFetchDelete<T>(
   path: string,
@@ -164,64 +141,28 @@ export async function apiFetchDelete<T>(
   const token = getToken();
   const url = `${getApiBaseUrl()}${path}`;
 
-  let res: Response;
-  try {
-    res = await fetch(url, {
-      ...init,
-      headers: {
-        ...(token ? { Authorization: token } : {}),
-        ...(init?.headers ?? {}),
-      },
-    });
-  } catch (fetchError) {
-    // This is a true network error (CORS, connection refused, etc.)
-    const errorMessage =
-      fetchError instanceof Error ? fetchError.message : String(fetchError);
-    if (
-      errorMessage.includes('fetch') ||
-      errorMessage.includes('Failed to fetch') ||
-      errorMessage.includes('NetworkError')
-    ) {
-      throw new Error(
-        `Network error: Unable to reach ${url}. Check if the server is running and CORS is configured. Original error: ${errorMessage}`,
-      );
-    }
-    throw fetchError;
+  const res = await fetch(url, {
+    ...init,
+    method: 'DELETE', // Força o método DELETE
+    headers: {
+      ...(token ? { Authorization: token } : {}),
+      ...(init?.headers ?? {}),
+    },
+  });
+
+  // Tratamento específico para o 204 no DELETE
+  if (res.status === 204) {
+    // Retorna um objeto que satisfaça o tipo esperado (ex: MessageResponse)
+    return { message: 'Deleted successfully' } as unknown as T;
   }
 
   if (!res.ok) {
-    let message = `Request failed (${res.status})`;
-    try {
-      const data = (await res.json()) as {
-        message?: string;
-        error?: string;
-        issues?: Array<{ path: string[]; message: string }>;
-      };
-      if (data?.message) {
-        message = data.message;
-      } else if (data?.error) {
-        message = data.error;
-      } else if (data?.issues && Array.isArray(data.issues)) {
-        // Zod validation errors
-        message = `Validation error: ${data.issues
-          .map((issue) => `${issue.path.join('.')}: ${issue.message}`)
-          .join(', ')}`;
-      }
-    } catch {
-      // If response is not JSON, try to get text
-      try {
-        const text = await res.text();
-        if (text) message = text;
-      } catch {
-        // ignore
-      }
-    }
-    throw new Error(message);
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.message || `Delete failed (${res.status})`);
   }
 
   return (await res.json()) as T;
 }
-
 // Auth APIs
 export async function loginApi(input: {
   email: string;
