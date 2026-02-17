@@ -1,6 +1,7 @@
 import { getToken } from './auth';
 
-const DEFAULT_API_BASE_URL = 'https://tlanner-main-1.onrender.com/';
+const DEFAULT_API_BASE_URL =
+  'https://tlanner-main-production-aeba.up.railway.app';
 // const DEFAULT_API_BASE_URL = 'http://localhost:3000/';
 
 export function getApiBaseUrl(): string {
