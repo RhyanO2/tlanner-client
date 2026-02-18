@@ -317,6 +317,7 @@ export function HabitTracker() {
 
         {/* Tab Navigation */}
         <div
+          className="selector"
           style={{
             display: 'flex',
             gap: '14px',
@@ -611,7 +612,7 @@ export function HabitTracker() {
                               height: '100%',
                               width: `${progress.percentage}%`,
                               background:
-                                'linear-gradient(135deg, var(--success), var(--success-dark))',
+                                'linear-gradient(135deg, rgba(0,125,0), rgba(0,200,0))',
                               transition: 'width 0.3s ease',
                             }}
                           />
