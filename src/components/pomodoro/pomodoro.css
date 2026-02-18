@@ -1,310 +1,252 @@
-* {
-  font-family:
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    Segoe UI,
-    Roboto,
-    Helvetica,
-    Arial,
-    'Apple Color Emoji',
-    'Segoe UI Emoji';
-}
-
 .pomodoro-root {
   display: flex;
   justify-content: center;
-  padding: 1rem;
+  padding: 0.25rem;
 }
 
 .pomodoro-card {
-  max-width: 420px;
   width: 100%;
-}
-
-.pomodoro-border {
-  /* padding: 4px; */
-  border-radius: 24px;
+  max-width: 460px;
 }
 
 .pomodoro-inner {
+  border-radius: 18px;
+  border: 1px solid var(--border);
   background: var(--card);
-  border-radius: 24px;
-  padding: 2rem;
+  padding: 1rem;
 }
 
 .pomodoro-header {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  margin-bottom: 2rem;
+  gap: 10px;
+  margin-bottom: 0.75rem;
 }
 
 .pomodoro-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--text);
+  margin: 0;
+  font-size: 1.2rem;
+  letter-spacing: -0.02em;
 }
 
-.icon-btn {
-  padding: 0.5rem;
+.pomodoro-settings-toggle {
+  font-size: 12px;
+  padding: 8px 10px;
+}
+
+.mode-switch {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.mode-btn {
   border-radius: 10px;
+  border: 1px solid var(--border);
   background: transparent;
-  border: none;
+  color: var(--muted);
+  padding: 0.55rem 0.4rem;
   cursor: pointer;
-  gap: 5px;
+  font-size: 0.82rem;
+  font-weight: 600;
 }
 
-.icon-btn:hover {
-  background: var(--card-2);
+.mode-btn.is-active {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.09);
 }
 
 .timer-wrapper {
   position: relative;
-  margin-bottom: 2rem;
+  width: min(300px, 100%);
+  margin: 0 auto 1rem;
+}
+
+.timer-ring {
+  width: 100%;
+  height: auto;
 }
 
 .timer-center {
   position: absolute;
   inset: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  padding: 0 12px;
+}
+
+.timer-mode-label {
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .timer-time {
-  font-size: 3rem;
+  font-size: clamp(2rem, 9vw, 3.2rem);
   font-weight: 700;
-  color: var(--text);
+  letter-spacing: -0.04em;
 }
 
 .timer-session {
-  font-size: 0.85rem;
   color: var(--muted);
+  font-size: 0.78rem;
 }
 
 .actions {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-.primary-icon-btn {
-  display: flex;
   align-items: center;
-  justify-content: center;
-  line-height: 0;
-  gap: 2px;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
 }
 
 .primary-btn {
   flex: 1;
-  padding: 1rem;
-  border-radius: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  color: var(--text);
   font-weight: 600;
-  border: none;
+  padding: 0.9rem;
   cursor: pointer;
-  color: white;
-}
-.primary-btn:hover {
-  transform: translateY(-1px);
-  background: rgba(255, 255, 255, 0.008);
-  border-color: rgba(255, 255, 255, 0.18);
-  /* color: #fff; */
 }
 
-/* .save-btn {
-  flex: 1;
-  padding: 1rem;
-  border-radius: 16px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  color: white;
-} */
-
-.actions .save-btn {
-  flex: 1;
-  padding: 1rem;
-  border-radius: 16px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  background-color: #fff;
-  margin-top: 7px;
-  color: black;
-  margin-block: 7px;
-}
-.actions .save-btn:hover {
-  transform: translateY(-1px);
-  /* background: rgba(255, 255, 255, 0.09); */
-  border-color: rgba(255, 255, 255, 0.18);
-  /* color: #fff; */
+.primary-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .secondary-icon-btn {
-  padding: 0.8rem;
-  border-radius: 16px;
-  background: var(--card-2);
-  border: none;
-  cursor: pointer;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: transparent;
   color: var(--text);
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  line-height: 0;
-  gap: 2px;
+  cursor: pointer;
 }
 
-.secondary-icon-btn:hover {
-  transform: translateY(-1px);
-  background: rgba(255, 255, 255, 0.09);
-  border-color: rgba(255, 255, 255, 0.18);
-  /* color: #fff; */
-}
-/* .cancel-btn {
-  padding: 1rem;
-  border-radius: 16px;
-  background: var(--card-2);
-  border: none;
-  cursor: pointer;
-  color: var(--text);
-} */
-/* .actions .cancel-btn {
-  flex: 0;
-  padding: 1rem;
-  border-radius: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  border-radius: 16px;
-  background: var(--card-2);
-  border: none;
-  margin-top: 7px;
-} */
-
-.actions .cancel-btn {
-  flex: 0;
-  padding: 1rem;
-  border-radius: 16px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  background: var(--card-2);
-  margin-top: 7px;
-  margin-block: 7px;
-}
-.actions .cancel-btn:hover {
-  transform: translateY(-1px);
-  background: rgba(255, 255, 255, 0.09);
-  border-color: rgba(255, 255, 255, 0.18);
-}
-
-.mode-switch {
-  display: flex;
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.5rem;
+  margin-bottom: 0.9rem;
 }
 
-.mode-btn {
-  flex: 1;
-  padding: 0.5rem;
+.preset-btn {
+  border: 1px solid var(--border);
   border-radius: 10px;
-  font-size: 0.85rem;
-  border: none;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--muted);
+  padding: 0.55rem 0.4rem;
   cursor: pointer;
+  font-size: 0.78rem;
 }
 
-.mode-btn:hover {
-  transform: translateY(-1px);
-  /* background: rgba(255, 255, 255, 0.09); */
-  border-color: rgba(255, 255, 255, 0.18);
-  /* color: #fff; */
+.preset-btn:hover,
+.mode-btn:hover,
+.primary-btn:hover,
+.secondary-icon-btn:hover {
+  border-color: rgba(255, 255, 255, 0.24);
+  color: var(--text);
 }
 
 .settings-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 0.9rem 0;
+  margin-bottom: 0.9rem;
 }
 
 .settings-group {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .settings-label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text);
+  color: var(--muted);
+  font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
 }
 
 .settings-input {
-  padding: 0.75rem;
-  border-radius: var(--radius);
-  background: var(--card-2);
+  border-radius: 10px;
   border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
   color: var(--text);
-  font-size: 0.95rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  padding: 0.55rem 0.7rem;
 }
 
 .settings-input:focus {
   outline: none;
   border-color: var(--primary-2);
-  background: var(--card);
 }
 
-.settings-input::placeholder {
+.pomodoro-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.86rem;
+  grid-column: 1 / -1;
+}
+
+.history-section {
+  margin-top: 0.3rem;
+}
+
+.history-title {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+.history-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.42rem;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  padding: 0.42rem 0.58rem;
+  font-size: 0.8rem;
   color: var(--muted);
 }
 
-.settings-actions {
-  display: flex;
-  gap: 0.75rem;
-  margin-top: 0.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-}
-
-.actions .primary-btn {
-  background: var(--primary-2);
-}
-
-.settings-actions .primary-btn:hover {
-  background: var(--primary);
-}
-
-.settings-actions .secondary-btn {
-  flex: 1;
-}
-@media (max-width: 1400px) {
+@media (max-width: 900px) {
   .pomodoro-inner {
-    background: var(--card);
-    border-radius: 24px;
-    padding: 2rem;
-    height: auto;
-    width: auto;
-  }
-  .pomodoro-header {
-    margin-bottom: -5px;
-    margin-top: -20px;
-  }
-  .timer-center {
-    text-align: center;
-  }
-  .timer-time {
-    text-align: center;
-  }
-  .timer-session {
-    text-align: center;
+    padding: 0.9rem;
   }
 
-  .options-select input {
-    font-size: small;
+  .mode-switch,
+  .preset-grid {
+    grid-template-columns: 1fr;
   }
-  .pomodoro-root {
-    margin: 0;
-    /* padding: 0; */
+
+  .settings-panel {
+    grid-template-columns: 1fr;
   }
 }

@@ -1,0 +1,189 @@
+.container {
+  width: min(1100px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #111214;
+  border-bottom: none;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-mark {
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+}
+
+.brand-text {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.brand-logo {
+  display: block;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-link {
+  padding: 8px 10px;
+  border-radius: 10px;
+  color: var(--muted);
+  border: none;
+}
+
+.nav-link.active {
+  color: var(--text);
+  background: #22252a;
+}
+
+.main {
+  flex: 1;
+  padding: 24px 0 48px;
+}
+
+.footer {
+  border-top: none;
+  background: #141518;
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 0;
+}
+
+.app-shell-auth {
+  flex-direction: row;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  padding: 16px 12px;
+  background: #121315;
+  border-right: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: width 0.2s ease;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 30;
+}
+
+.sidebar.is-collapsed {
+  width: 106px;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sidebar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar-brand-text {
+  font-weight: 700;
+}
+
+.sidebar-toggle {
+  padding: 8px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  color: var(--muted);
+  border-radius: 12px;
+  padding: 10px;
+  font-weight: 500;
+}
+
+.sidebar-link:hover {
+  background: #24262b;
+  color: var(--text);
+}
+
+.sidebar-link.active {
+  background: #2b2e34;
+  color: var(--text);
+}
+
+.sidebar.is-collapsed .sidebar-brand-text {
+  display: none;
+}
+
+.sidebar.is-collapsed .sidebar-link {
+  justify-content: center;
+}
+
+.sidebar.is-collapsed .sidebar-link-text {
+  font-size: 12px;
+}
+
+.sidebar-logout {
+  margin-top: auto;
+  justify-content: flex-start;
+}
+
+.sidebar-backdrop {
+  display: none;
+}
+
+.app-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-topbar {
+  display: none;
+}
+
+.main-auth {
+  padding: 24px 0;
+}

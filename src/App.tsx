@@ -12,20 +12,23 @@ import { HabitTracker } from './pages/HabitTracker';
 
 function App() {
   return (
-    <AppShell>
-      <Routes>
+    <Routes>
+      <Route element={<AppShell mode="public" />}>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
-        <Route element={<ProtectedRoute />}>
+      </Route>
+
+      <Route element={<ProtectedRoute />}>
+        <Route element={<AppShell mode="authenticated" />}>
           <Route path="/pomodoro" element={<PomodoroTimer />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/workspace/:workspaceId" element={<WorkspaceTasks />} />
           <Route path="/habittracker" element={<HabitTracker />} />
         </Route>
-      </Routes>
-    </AppShell>
+      </Route>
+    </Routes>
   );
 }
 

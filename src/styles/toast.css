@@ -1,0 +1,29 @@
+.toast-stack {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 120;
+  width: min(320px, calc(100vw - 24px));
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.toast-item {
+  border: none;
+  background: #202227;
+  color: var(--text);
+  border-radius: 12px;
+  padding: 10px 12px;
+  box-shadow: none;
+}
+
+.toast-title {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+
+.toast-message {
+  font-size: 14px;
+}

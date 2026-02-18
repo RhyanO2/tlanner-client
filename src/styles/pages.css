@@ -1,0 +1,84 @@
+.landing-minimal {
+  display: grid;
+  gap: 28px;
+  padding: 24px 0;
+}
+
+.landing-hero {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 16px;
+}
+
+.landing-block {
+  border: none;
+  border-radius: var(--radius);
+  background: var(--card);
+  padding: 24px;
+}
+
+.landing-hero-main,
+.landing-hero-side {
+  border-radius: var(--radius);
+  background: var(--card);
+  padding: 26px;
+}
+
+.landing-free-chip {
+  display: inline-flex;
+  margin: 0 0 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.landing-title {
+  margin: 0 0 10px;
+  font-size: clamp(2.1rem, 4.6vw, 3.3rem);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.landing-title-highlight {
+  color: var(--primary-2);
+}
+
+.landing-subtitle {
+  margin: 0;
+  max-width: 700px;
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+.landing-cta {
+  margin-top: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.landing-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.landing-list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+}
+
+.landing-list li {
+  margin-bottom: 6px;
+}
+
+.landing-kicker {
+  margin: 0 0 8px;
+  font-weight: 700;
+}

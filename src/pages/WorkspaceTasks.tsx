@@ -21,7 +21,6 @@ import { useWebSocket } from '../lib/useWebsocket';
 //   return 'Done';
 // }
 
-
 function createTempId() {
   return `temp-${crypto.randomUUID()}`;
 }
@@ -77,8 +76,6 @@ function organizeTasksByStatusAndPriority(
 }
 
 export function WorkspaceTasks() {
-
-
   const navigate = useNavigate();
   const { workspaceId } = useParams<{ workspaceId: string }>();
   const token = getToken();
@@ -107,7 +104,6 @@ export function WorkspaceTasks() {
   const [taskPriority, setTaskPriority] = useState<TaskPriority>('normal');
   const [taskStatus, setTaskStatus] = useState<TaskStatus>('pending');
 
-  
   useWebSocket((event, data) => {
     switch (event) {
       case 'task:created':
@@ -124,8 +120,8 @@ export function WorkspaceTasks() {
       case 'task:updated':
         setTasks((prev) =>
           prev.map((t) =>
-            t.id === data.taskId ? { ...t, ...data.updated } : t
-          )
+            t.id === data.taskId ? { ...t, ...data.updated } : t,
+          ),
         );
         break;
 
@@ -134,8 +130,6 @@ export function WorkspaceTasks() {
         break;
     }
   });
-
-
 
   const organizedTasks = useMemo(
     () => organizeTasksByStatusAndPriority(tasks),
@@ -422,7 +416,6 @@ export function WorkspaceTasks() {
             className="button button-ghost"
             onClick={() => navigate('/dashboard')}
             type="button"
-            style={{ marginBottom: '0.5rem' }}
           >
             ← Back to workspaces
           </button>
@@ -482,26 +475,23 @@ export function WorkspaceTasks() {
                       </div>
                     </div>
                     <div className="task-card-desc">{task.description}</div>
-                    {task.due_date &&
-                      (() => {
-                        const date = new Date(
-                          task.due_date.length === 10
-                            ? `${task.due_date}T12:00:00`
-                            : task.due_date,
-                        );
+                    {task.due_date && (
+                      <div className="task-due-date">
+                        {(() => {
+                          const date = new Date(
+                            task.due_date.length === 10
+                              ? `${task.due_date}T12:00:00`
+                              : task.due_date,
+                          );
 
-                        if (isNaN(date.getTime())) return '—';
+                          if (isNaN(date.getTime())) return '—';
 
-                        return date.toLocaleDateString('en-US');
-                      })()}
+                          return date.toLocaleDateString('en-US');
+                        })()}
+                      </div>
+                    )}
 
-                    <div
-                      style={{
-                        display: 'flex',
-                        gap: '0.5rem',
-                        marginTop: '1rem',
-                      }}
-                    >
+                    <div className="task-actions">
                       {(task.status === 'pending' ||
                         task.status === 'in_progress') && (
                         <button
@@ -509,14 +499,13 @@ export function WorkspaceTasks() {
                           onClick={() => openPomodoroModal(task)}
                           type="button"
                         >
-                          <LuAlarmClockCheck color="#ffffff" />
+                          <LuAlarmClockCheck />
                         </button>
                       )}
                       <button
                         className="button button-secondary"
                         onClick={() => openEditModal(task)}
                         type="button"
-                        style={{ flex: 1 }}
                       >
                         Edit
                       </button>
@@ -524,7 +513,6 @@ export function WorkspaceTasks() {
                         className="button button-ghost"
                         onClick={() => handleDelete(task.id)}
                         type="button"
-                        style={{ flex: 1 }}
                       >
                         Delete
                       </button>
@@ -544,50 +532,27 @@ export function WorkspaceTasks() {
 
       {/* //pomodoro.tsx as modal */}
       {showPomodoroModal && selectedTaskForPomodoro && (
-        <div
-          className="modal-overlay"
-          onClick={closeModals}
-          style={{ overflow: 'hidden' }}
-        >
-          <div
-            className="modal"
-            onClick={(e) => e.stopPropagation()}
-            // style={{ maxWidth: '600px' }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '1rem',
-              }}
-            >
+        <div className="modal-overlay" onClick={closeModals}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
               <h3 className="modal-title">
                 Pomodoro - {selectedTaskForPomodoro.title}
               </h3>
               <button
-                className="button button-ghost"
+                className="button button-ghost modal-close"
                 onClick={closeModals}
                 type="button"
-                style={{ padding: '0.25rem 0.5rem' }}
               >
                 ✕
               </button>
             </div>
             <PomodoroTimer />
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                marginTop: '1rem',
-              }}
-            >
+            <div className="modal-actions-end">
               <button
                 className="button button-finish"
                 type="button"
                 onClick={handleFinishTask}
                 disabled={submitting}
-                style={{ display: 'flex' }}
               >
                 Finish Task
               </button>
@@ -653,14 +618,11 @@ export function WorkspaceTasks() {
                   <option value="urgent">Urgent</option>
                 </select>
               </label>
-              <div
-                style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}
-              >
+              <div className="modal-actions">
                 <button
                   className="button button-primary"
                   type="submit"
                   disabled={submitting}
-                  style={{ flex: 1 }}
                 >
                   {submitting ? 'Creating…' : 'Create'}
                 </button>
@@ -669,7 +631,6 @@ export function WorkspaceTasks() {
                   type="button"
                   onClick={closeModals}
                   disabled={submitting}
-                  style={{ flex: 1 }}
                 >
                   Cancel
                 </button>
@@ -748,14 +709,11 @@ export function WorkspaceTasks() {
                   <option value="urgent">Urgent</option>
                 </select>
               </label>
-              <div
-                style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}
-              >
+              <div className="modal-actions">
                 <button
                   className="button button-primary"
                   type="submit"
                   disabled={submitting}
-                  style={{ flex: 1 }}
                 >
                   {submitting ? 'Updating…' : 'Update'}
                 </button>
@@ -764,7 +722,6 @@ export function WorkspaceTasks() {
                   type="button"
                   onClick={closeModals}
                   disabled={submitting}
-                  style={{ flex: 1 }}
                 >
                   Cancelar
                 </button>
