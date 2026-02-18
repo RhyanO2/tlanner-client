@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Tlanner">
+  <rect x="46" y="27" width="16" height="60" rx="4" fill="#737b89" />
+  <path
+    d="M20,38 C20,38 35,50 45,50 C55,50 85,15 85,15"
+    fill="none"
+    stroke="#f2f3f5"
+    stroke-width="12"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>
