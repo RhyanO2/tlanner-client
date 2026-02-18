@@ -9,12 +9,15 @@ export function Landing() {
             <p className="landing-free-chip">Free Beta Access</p>
             <h1 className="landing-title">
               Build focus today, scale your workflow tomorrow.
-              <span className="landing-title-highlight"> Start free in beta.</span>
+              <span className="landing-title-highlight">
+                {' '}
+                Start free in beta.
+              </span>
             </h1>
             <p className="landing-subtitle">
               Tlanner helps you organize workspaces, tasks and focus sessions in
-              one clean flow. Access is free during beta while we evolve advanced
-              features for future plans.
+              one clean flow. Access is free during beta while we evolve
+              advanced features for future plans.
             </p>
             <div className="landing-cta">
               <Link className="button button-primary" to="/register">

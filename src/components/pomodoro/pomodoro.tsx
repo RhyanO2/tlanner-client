@@ -19,7 +19,12 @@ type SessionHistory = {
   durationMinutes: number;
 };
 
-const PRESETS: Array<{ label: string; work: number; short: number; long: number }> = [
+const PRESETS: Array<{
+  label: string;
+  work: number;
+  short: number;
+  long: number;
+}> = [
   { label: 'Classic 25/5', work: 25, short: 5, long: 15 },
   { label: 'Deep 50/10', work: 50, short: 10, long: 20 },
   { label: 'Light 15/3', work: 15, short: 3, long: 10 },
@@ -41,13 +46,19 @@ function getModeColor(mode: TimerMode) {
   return '#9ca3af';
 }
 
-function getModeMinutesFromSettings(settings: PomodoroSettings, mode: TimerMode) {
+function getModeMinutesFromSettings(
+  settings: PomodoroSettings,
+  mode: TimerMode,
+) {
   if (mode === 'work') return settings.workMinutes;
   if (mode === 'shortBreak') return settings.shortBreakMinutes;
   return settings.longBreakMinutes;
 }
 
-function getModeSecondsFromSettings(settings: PomodoroSettings, mode: TimerMode) {
+function getModeSecondsFromSettings(
+  settings: PomodoroSettings,
+  mode: TimerMode,
+) {
   return getModeMinutesFromSettings(settings, mode) * 60;
 }
 
@@ -141,8 +152,11 @@ export default function PomodoroTimer() {
       if (!soundEnabled) return;
       const AudioContextCtor =
         window.AudioContext ||
-        (window as typeof window & { webkitAudioContext?: typeof window.AudioContext })
-          .webkitAudioContext;
+        (
+          window as typeof window & {
+            webkitAudioContext?: typeof window.AudioContext;
+          }
+        ).webkitAudioContext;
       if (!AudioContextCtor) return;
 
       const audioContext = new AudioContextCtor();
@@ -165,7 +179,10 @@ export default function PomodoroTimer() {
 
     const handleComplete = async () => {
       const finishedMode = mode;
-      const finishedDuration = getModeMinutesFromSettings(settings, finishedMode);
+      const finishedDuration = getModeMinutesFromSettings(
+        settings,
+        finishedMode,
+      );
 
       setHistory((current) => [
         {
@@ -289,7 +306,9 @@ export default function PomodoroTimer() {
             <div className="timer-center">
               <div className="timer-mode-label">{MODE_LABELS[mode]}</div>
               <div className="timer-time">{formatTime(timeLeft)}</div>
-              <div className="timer-session">Completed focus sessions: {completedSessions}</div>
+              <div className="timer-session">
+                Completed focus sessions: {completedSessions}
+              </div>
             </div>
           </div>
 
@@ -304,7 +323,11 @@ export default function PomodoroTimer() {
                 {isRunning ? 'Pause' : 'Start'}
               </span>
             </button>
-            <button className="secondary-icon-btn" onClick={resetTimer} type="button">
+            <button
+              className="secondary-icon-btn"
+              onClick={resetTimer}
+              type="button"
+            >
               <FiRotateCcw size={17} />
             </button>
           </div>
@@ -332,7 +355,9 @@ export default function PomodoroTimer() {
                   min={1}
                   max={180}
                   value={settings.workMinutes}
-                  onChange={(e) => updateSetting('workMinutes', Number(e.target.value))}
+                  onChange={(e) =>
+                    updateSetting('workMinutes', Number(e.target.value))
+                  }
                 />
               </label>
 
@@ -365,7 +390,9 @@ export default function PomodoroTimer() {
               </label>
 
               <label className="settings-group">
-                <span className="settings-label">Sessions until long break</span>
+                <span className="settings-label">
+                  Sessions until long break
+                </span>
                 <input
                   className="settings-input"
                   type="number"
@@ -373,7 +400,10 @@ export default function PomodoroTimer() {
                   max={12}
                   value={settings.sessionsUntilLongBreak}
                   onChange={(e) =>
-                    updateSetting('sessionsUntilLongBreak', Number(e.target.value))
+                    updateSetting(
+                      'sessionsUntilLongBreak',
+                      Number(e.target.value),
+                    )
                   }
                 />
               </label>

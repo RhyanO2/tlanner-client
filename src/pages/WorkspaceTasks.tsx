@@ -21,7 +21,6 @@ import { useWebSocket } from '../lib/useWebsocket';
 //   return 'Done';
 // }
 
-
 function createTempId() {
   return `temp-${crypto.randomUUID()}`;
 }
@@ -77,8 +76,6 @@ function organizeTasksByStatusAndPriority(
 }
 
 export function WorkspaceTasks() {
-
-
   const navigate = useNavigate();
   const { workspaceId } = useParams<{ workspaceId: string }>();
   const token = getToken();
@@ -107,7 +104,6 @@ export function WorkspaceTasks() {
   const [taskPriority, setTaskPriority] = useState<TaskPriority>('normal');
   const [taskStatus, setTaskStatus] = useState<TaskStatus>('pending');
 
-  
   useWebSocket((event, data) => {
     switch (event) {
       case 'task:created':
@@ -124,8 +120,8 @@ export function WorkspaceTasks() {
       case 'task:updated':
         setTasks((prev) =>
           prev.map((t) =>
-            t.id === data.taskId ? { ...t, ...data.updated } : t
-          )
+            t.id === data.taskId ? { ...t, ...data.updated } : t,
+          ),
         );
         break;
 
@@ -134,8 +130,6 @@ export function WorkspaceTasks() {
         break;
     }
   });
-
-
 
   const organizedTasks = useMemo(
     () => organizeTasksByStatusAndPriority(tasks),
@@ -484,15 +478,15 @@ export function WorkspaceTasks() {
                     {task.due_date && (
                       <div className="task-due-date">
                         {(() => {
-                        const date = new Date(
-                          task.due_date.length === 10
-                            ? `${task.due_date}T12:00:00`
-                            : task.due_date,
-                        );
+                          const date = new Date(
+                            task.due_date.length === 10
+                              ? `${task.due_date}T12:00:00`
+                              : task.due_date,
+                          );
 
-                        if (isNaN(date.getTime())) return '—';
+                          if (isNaN(date.getTime())) return '—';
 
-                        return date.toLocaleDateString('en-US');
+                          return date.toLocaleDateString('en-US');
                         })()}
                       </div>
                     )}

@@ -1,10 +1,5 @@
 import { useState } from 'react';
-import {
-  Link,
-  NavLink,
-  Outlet,
-  useNavigate,
-} from 'react-router-dom';
+import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { clearToken, getToken } from '../lib/auth';
 import {
   LuHouse,
@@ -46,7 +41,14 @@ function TlannerLogo(props: { compact?: boolean }) {
         aria-label="Tlanner"
         className="brand-logo"
       >
-        <rect x="46" y="27" width="16" height="60" rx="4" fill="var(--primary-2)" />
+        <rect
+          x="46"
+          y="27"
+          width="16"
+          height="60"
+          rx="4"
+          fill="var(--primary-2)"
+        />
         <path
           d="M20,38 C20,38 35,50 45,50 C55,50 85,15 85,15"
           fill="none"
@@ -70,7 +72,14 @@ function TlannerLogo(props: { compact?: boolean }) {
       className="brand-logo"
     >
       <g>
-        <rect x="46" y="27" width="16" height="60" rx="4" fill="var(--primary-2)" />
+        <rect
+          x="46"
+          y="27"
+          width="16"
+          height="60"
+          rx="4"
+          fill="var(--primary-2)"
+        />
         <path
           d="M20,38 C20,38 35,50 45,50 C55,50 85,15 85,15"
           fill="none"
@@ -153,7 +162,11 @@ export function AppShell({ mode }: AppShellProps) {
             type="button"
             aria-label={collapsed ? 'Expand menu' : 'Collapse menu'}
           >
-            {collapsed ? <LuPanelLeft size={18} /> : <LuPanelLeftClose size={18} />}
+            {collapsed ? (
+              <LuPanelLeft size={18} />
+            ) : (
+              <LuPanelLeftClose size={18} />
+            )}
           </button>
         </div>
 
