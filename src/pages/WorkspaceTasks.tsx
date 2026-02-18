@@ -13,12 +13,14 @@ import {
 import { clearToken, getToken, getUserIdFromToken } from '../lib/auth';
 import PomodoroTimer from '../components/pomodoro/pomodoro';
 import { LuAlarmClockCheck } from 'react-icons/lu';
+import { useWebSocket } from '../lib/useWebsocket';
 
 // function statusLabel(status: TaskStatus) {
 //   if (status === 'pending') return 'Pending';
 //   if (status === 'in_progress') return 'In Progress';
 //   return 'Done';
 // }
+
 
 function createTempId() {
   return `temp-${crypto.randomUUID()}`;
@@ -75,6 +77,8 @@ function organizeTasksByStatusAndPriority(
 }
 
 export function WorkspaceTasks() {
+
+
   const navigate = useNavigate();
   const { workspaceId } = useParams<{ workspaceId: string }>();
   const token = getToken();
@@ -102,6 +106,36 @@ export function WorkspaceTasks() {
   const [taskDueDate, setTaskDueDate] = useState('');
   const [taskPriority, setTaskPriority] = useState<TaskPriority>('normal');
   const [taskStatus, setTaskStatus] = useState<TaskStatus>('pending');
+
+  
+  useWebSocket((event, data) => {
+    switch (event) {
+      case 'task:created':
+        // Só reage se for do workspace atual
+        if (data.workspaceID !== workspaceId) break;
+        setTasks((prev) => {
+          // Se já existe (optimistic UI com temp-id já foi substituído), ignora
+          if (prev.some((t) => t.id === data.task.id)) return prev;
+          // Remove o temp-id se existir e adiciona o real
+          return [...prev.filter((t) => !t.id.startsWith('temp-')), data.task];
+        });
+        break;
+
+      case 'task:updated':
+        setTasks((prev) =>
+          prev.map((t) =>
+            t.id === data.taskId ? { ...t, ...data.updated } : t
+          )
+        );
+        break;
+
+      case 'task:deleted':
+        setTasks((prev) => prev.filter((t) => t.id !== data.taskId));
+        break;
+    }
+  });
+
+
 
   const organizedTasks = useMemo(
     () => organizeTasksByStatusAndPriority(tasks),

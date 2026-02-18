@@ -8,6 +8,7 @@ import {
   type Workspace,
 } from '../lib/api';
 import { clearToken, getToken, getUserIdFromToken } from '../lib/auth';
+import { useWebSocket } from '../lib/useWebsocket';
 
 export function Dashboard() {
   const navigate = useNavigate();
@@ -27,6 +28,29 @@ export function Dashboard() {
   const [workspaceTitle, setWorkspaceTitle] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
+  useWebSocket((event, data) => {
+    switch (event) {
+      case 'workspace:created':
+        // Se o workspace já está na lista (optimistic UI), ignora
+        // setWorkspaces((prev) => {
+        //   if (prev.some((w) => w.id === data.workspace.id)) return prev;
+        //   return [...prev, data.workspace];
+        // });
+        break;
+
+      case 'workspace:updated':
+        setWorkspaces((prev) =>
+          prev.map((w) =>
+            w.id === data.workspaceId ? { ...w, title: data.title } : w,
+          ),
+        );
+        break;
+
+      case 'workspace:deleted':
+        setWorkspaces((prev) => prev.filter((w) => w.id !== data.workspaceId));
+        break;
+    }
+  });
   // Verifica autenticação antes de carregar
   useEffect(() => {
     if (!token || !userId) {

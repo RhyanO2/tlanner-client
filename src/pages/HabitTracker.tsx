@@ -9,6 +9,7 @@ import {
   type Habit,
   type HabitFrequency,
 } from '../lib/api';
+import { useWebSocket } from '../lib/useWebsocket';
 
 function createTempId() {
   return `temp-${crypto.randomUUID()}`;
@@ -37,6 +38,29 @@ export function HabitTracker() {
 
   // Active tab
   const [activeTab, setActiveTab] = useState<'habits' | 'daily'>('habits');
+
+  useWebSocket((event, data) => {
+    switch (event) {
+      case 'habit:created':
+        setHabits((prev) => {
+          if (prev.some((h) => h.id === data.habit.id)) return prev;
+          return [...prev.filter((h) => !h.id.startsWith('temp-')), data.habit];
+        });
+        break;
+
+      case 'habit:updated':
+        setHabits((prev) =>
+          prev.map((h) =>
+            h.id === data.habitId ? { ...h, ...data.edited } : h,
+          ),
+        );
+        break;
+
+      case 'habit:deleted':
+        setHabits((prev) => prev.filter((h) => h.id !== data.habitId));
+        break;
+    }
+  });
 
   useEffect(() => {
     if (!token || !userId) {
