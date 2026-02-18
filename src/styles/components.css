@@ -1,0 +1,416 @@
+.muted {
+  color: var(--muted);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-weight: 600;
+  border: none;
+  background: var(--surface-2);
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.button-primary,
+.button-primaryEmoji,
+.button-finish {
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  font-family:
+    'IBM Plex Sans',
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    Helvetica,
+    Arial,
+    'Apple Color Emoji',
+    'Segoe UI Emoji';
+}
+
+.button-secondary {
+  background: var(--surface);
+}
+
+.button-ghost {
+  background: transparent;
+}
+
+.button-primaryEmoji {
+  flex: 0;
+}
+
+.button-githubAuth {
+  background: #171515;
+}
+
+.button-githubAuth:hover {
+  background: #24292e;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: #d7d9dd;
+  border: none;
+  background: var(--surface-2);
+}
+
+.card,
+.auth-card,
+.modal,
+.task-card,
+.feature,
+.stat,
+.kanban-column,
+.cardHabit {
+  border-radius: var(--radius);
+  border: none;
+  background: var(--card);
+  box-shadow: none;
+}
+
+.card {
+  padding: 18px;
+}
+
+.card-title {
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.task {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: var(--surface-2);
+  margin-top: 10px;
+}
+
+.task-title {
+  font-weight: 600;
+}
+
+.pill {
+  font-size: 12px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  border: none;
+  background: #3a3e46;
+}
+
+.pill-pending,
+.pill-low {
+  background: #4a4f58;
+}
+
+.pill-progress,
+.pill-normal {
+  background: #5a606a;
+}
+
+.pill-done,
+.pill-high {
+  background: #666d78;
+}
+
+.pill-urgent {
+  background: #2d3138;
+}
+
+.auth {
+  display: grid;
+  place-items: center;
+  padding-top: 18px;
+}
+
+.auth-card {
+  width: min(440px, 100%);
+  padding: 22px;
+}
+
+.auth-title {
+  margin: 0 0 6px;
+  font-size: 24px;
+}
+
+.form,
+.cardHabit form {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-label {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: var(--surface-2);
+  color: var(--text);
+  outline: none;
+}
+
+.input:focus {
+  box-shadow: 0 0 0 2px rgba(115, 123, 137, 0.35);
+}
+
+textarea.input {
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.providers {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.link {
+  color: #dde0e8;
+  font-weight: 600;
+}
+
+.alert {
+  border-radius: 12px;
+  border: none;
+  background: #3f2327;
+  padding: 10px 12px;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.page-title {
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.task-card {
+  padding: 16px;
+}
+
+.task-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.task-card-title {
+  font-weight: 700;
+}
+
+.task-card-desc {
+  color: var(--muted);
+  font-size: 14px;
+  white-space: pre-wrap;
+  cursor: pointer;
+}
+
+.task-card-clickable {
+  cursor: pointer;
+}
+
+.task-card-desc-spaced {
+  margin-bottom: 1rem;
+}
+
+.kanban-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.kanban-column {
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.kanban-column-header {
+  padding: 16px;
+  border-bottom: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kanban-column-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.kanban-column-count {
+  font-size: 12px;
+  color: var(--muted);
+  background: var(--surface-2);
+  padding: 4px 8px;
+  border-radius: 999px;
+}
+
+.kanban-column-content {
+  flex: 1;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+}
+
+.kanban-empty-state {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100px;
+  border: none;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.kanban-column.drag-over {
+  background: #2a2d33;
+}
+
+.task-card.draggable {
+  cursor: grab;
+}
+
+.task-card.draggable:active {
+  cursor: grabbing;
+}
+
+.task-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.task-actions > .button {
+  flex: 1;
+}
+
+.task-due-date {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 5, 6, 0.82);
+  display: grid;
+  place-items: center;
+  z-index: 100;
+  padding: 20px;
+}
+
+.modal {
+  width: min(500px, 100%);
+  padding: 24px;
+  max-height: 90vh;
+}
+
+.modal-title {
+  margin: 0 0 20px;
+  font-size: 20px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 10px;
+}
+
+.modal-close {
+  padding: 0.25rem 0.5rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.modal-actions > .button {
+  flex: 1;
+}
+
+.modal-actions-end {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.auth-footer {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 16px;
+}

@@ -1,93 +1,58 @@
 import { Link } from 'react-router-dom';
 
-
 export function Landing() {
   return (
     <div className="container">
-      <section className="hero">
-        <div className="hero-left">
-          <div className="badge">Task management, without the noise</div>
-          <h1 className="hero-title">
-            Tlanner helps you plan today and finish what matters.
-          </h1>
-          <p className="hero-subtitle">
-            A fast, minimal and secure task manager. Perfect for work, study and
-            daily planning
-          </p>
-          {/* <p className="hero-subtitle">
-            many workspaces to manage your obligations,
-          </p> */}
-          <div className="hero-cta">
-            <Link className="button button-primary" to="/register">
-              Create account
-            </Link>
-            <Link className="button button-secondary" to="/login">
-              I already have an account
-            </Link>
+      <section className="landing-minimal">
+        <div className="landing-hero">
+          <div className="landing-hero-main">
+            <p className="landing-free-chip">Free Beta Access</p>
+            <h1 className="landing-title">
+              Build focus today, scale your workflow tomorrow.
+              <span className="landing-title-highlight"> Start free in beta.</span>
+            </h1>
+            <p className="landing-subtitle">
+              Tlanner helps you organize workspaces, tasks and focus sessions in
+              one clean flow. Access is free during beta while we evolve advanced
+              features for future plans.
+            </p>
+            <div className="landing-cta">
+              <Link className="button button-primary" to="/register">
+                Start free beta
+              </Link>
+              <Link className="button button-secondary" to="/login">
+                Sign in
+              </Link>
+            </div>
           </div>
 
-          <div className="hero-stats">
-            {/* <div className="stat">
-              <div className="stat-value">Fast</div>
-              <div className="stat-label">Vite + React UI</div>
-            </div>
-            <div className="stat">
-              <div className="stat-value">Secure</div>
-              <div className="stat-label">JWT protected routes</div>
-            </div> */}
-            <div className="stat">
-              <div className="stat-value">Simple</div>
-              <div className="stat-label">Pending → In progress → Done</div>
-            </div>
-            <div className="stat">
-              <div className="stat-value">Workspaces</div>
-              <div className="stat-label">
-                Separate work, study and personal tasks
-              </div>
-            </div>
-            <div className="stat">
-              <div className="stat-value">Priorities</div>
-              <div className="stat-label"> High → Medium → Low</div>
-            </div>
+          <div className="landing-hero-side">
+            <p className="landing-kicker">What you get in beta</p>
+            <ul className="landing-list">
+              <li>Unlimited workspaces and task management.</li>
+              <li>Realtime collaboration updates.</li>
+              <li>Pomodoro timer for deep focus sessions.</li>
+            </ul>
           </div>
         </div>
 
-        <div className="hero-right">
-          <div className="card card-glow">
-            <div className="card-title">Your day at a glance</div>
-            <div className="task task-pending">
-              <div className="task-title">Draft sprint plan</div>
-              <div className="pill pill-pending">pending</div>
-            </div>
-            <div className="task task-progress">
-              <div className="task-title">Implement auth flow</div>
-              <div className="pill pill-progress">in progress</div>
-            </div>
-            <div className="task task-done">
-              <div className="task-title">Ship dashboard UI</div>
-              <div className="pill pill-done">done</div>
-            </div>
+        <div className="landing-columns">
+          <div className="landing-block">
+            <p className="landing-kicker">How it works</p>
+            <ol className="landing-list">
+              <li>Create a workspace for each project or area.</li>
+              <li>Add tasks and set priority and status.</li>
+              <li>Use Pomodoro to keep focus and complete tasks.</li>
+            </ol>
           </div>
-        </div>
-      </section>
 
-      <section className="feature-grid">
-        <div className="feature">
-          <div className="feature-title">Clean workflow</div>
-          <div className="feature-text">
-            A simple status model that mirrors how you actually work.
-          </div>
-        </div>
-        <div className="feature">
-          <div className="feature-title">Google calendar sync</div>
-          <div className="feature-text">
-            Syncronize your progress with google calendar
-          </div>
-        </div>
-        <div className="feature">
-          <div className="feature-title">AI integration</div>
-          <div className="feature-text">
-            AI-powered task planning and prioritization.
+          <div className="landing-block">
+            <p className="landing-kicker">Why teams use Tlanner</p>
+            <ul className="landing-list">
+              <li>Clear statuses: pending, in progress and done.</li>
+              <li>Realtime sync between connected users.</li>
+              <li>Minimal interface with focus on execution.</li>
+            </ul>
           </div>
         </div>
       </section>

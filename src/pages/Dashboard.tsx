@@ -259,26 +259,23 @@ export function Dashboard() {
             <div className="task-card" key={workspace.id}>
               <div className="task-card-top">
                 <div
-                  className="task-card-title"
-                  style={{ cursor: 'pointer' }}
+                  className="task-card-title task-card-clickable"
                   onClick={() => navigate(`/workspace/${workspace.id}`)}
                 >
                   {workspace.title}
                 </div>
               </div>
               <div
-                className="task-card-desc"
-                style={{ marginBottom: '1rem' }}
+                className="task-card-desc task-card-desc-spaced"
                 onClick={() => navigate(`/workspace/${workspace.id}`)}
               >
                 Click to manage tasks
               </div>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <div className="task-actions">
                 <button
                   className="button button-secondary"
                   onClick={() => openEditModal(workspace)}
                   type="button"
-                  style={{ flex: 1 }}
                 >
                   Edit
                 </button>
@@ -286,7 +283,6 @@ export function Dashboard() {
                   className="button button-ghost"
                   onClick={() => handleDelete(workspace.id)}
                   type="button"
-                  style={{ flex: 1 }}
                 >
                   Delete
                 </button>

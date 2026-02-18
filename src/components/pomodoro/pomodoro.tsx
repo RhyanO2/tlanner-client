@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-// import { Play, Pause, RotateCcw, Settings } from 'lucide-react';
-import { FaPlay, FaPause } from 'react-icons/fa';
-import { IoMdSettings } from 'react-icons/io';
+import { FaPause, FaPlay } from 'react-icons/fa';
 import { FiRotateCcw } from 'react-icons/fi';
 import './pomodoro.css';
 
@@ -13,6 +11,45 @@ interface PomodoroSettings {
 }
 
 type TimerMode = 'work' | 'shortBreak' | 'longBreak';
+
+type SessionHistory = {
+  id: string;
+  mode: TimerMode;
+  completedAt: number;
+  durationMinutes: number;
+};
+
+const PRESETS: Array<{ label: string; work: number; short: number; long: number }> = [
+  { label: 'Classic 25/5', work: 25, short: 5, long: 15 },
+  { label: 'Deep 50/10', work: 50, short: 10, long: 20 },
+  { label: 'Light 15/3', work: 15, short: 3, long: 10 },
+];
+
+const MODE_LABELS: Record<TimerMode, string> = {
+  work: 'Focus',
+  shortBreak: 'Short Break',
+  longBreak: 'Long Break',
+};
+
+function clampMinutes(value: number) {
+  return Math.min(180, Math.max(1, Math.floor(value)));
+}
+
+function getModeColor(mode: TimerMode) {
+  if (mode === 'work') return 'var(--text)';
+  if (mode === 'shortBreak') return 'var(--primary-2)';
+  return '#9ca3af';
+}
+
+function getModeMinutesFromSettings(settings: PomodoroSettings, mode: TimerMode) {
+  if (mode === 'work') return settings.workMinutes;
+  if (mode === 'shortBreak') return settings.shortBreakMinutes;
+  return settings.longBreakMinutes;
+}
+
+function getModeSecondsFromSettings(settings: PomodoroSettings, mode: TimerMode) {
+  return getModeMinutesFromSettings(settings, mode) * 60;
+}
 
 export default function PomodoroTimer() {
   const [settings, setSettings] = useState<PomodoroSettings>({
@@ -26,58 +63,156 @@ export default function PomodoroTimer() {
   const [timeLeft, setTimeLeft] = useState(settings.workMinutes * 60);
   const [isRunning, setIsRunning] = useState(false);
   const [completedSessions, setCompletedSessions] = useState(0);
+  const [history, setHistory] = useState<SessionHistory[]>([]);
   const [showSettings, setShowSettings] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(true);
 
   const intervalRef = useRef<number | null>(null);
 
-  const modeConfig = {
-    work: { color: '#009c007a', title: 'Worktime' },
-    shortBreak: { color: '#006dd4ba', title: 'Short Pause' },
-    longBreak: { color: '#667eeab4', title: 'Long Pause' },
-  };
+  const totalSeconds = getModeSecondsFromSettings(settings, mode);
+  const progress = totalSeconds === 0 ? 0 : (1 - timeLeft / totalSeconds) * 100;
 
-  const getModeMinutes = (m: TimerMode) =>
-    m === 'work'
-      ? settings.workMinutes
-      : m === 'shortBreak'
-        ? settings.shortBreakMinutes
-        : settings.longBreakMinutes;
+  const requestBrowserNotification = async () => {
+    if (typeof window === 'undefined' || !('Notification' in window)) return;
+    if (Notification.permission === 'default') {
+      await Notification.requestPermission();
+    }
+  };
 
   const resetTimer = () => {
     setIsRunning(false);
-    setTimeLeft(getModeMinutes(mode) * 60);
+    setTimeLeft(getModeSecondsFromSettings(settings, mode));
     if (intervalRef.current) clearInterval(intervalRef.current);
   };
 
   const switchMode = (m: TimerMode) => {
     setMode(m);
     setIsRunning(false);
-    setTimeLeft(getModeMinutes(m) * 60);
+    setTimeLeft(getModeSecondsFromSettings(settings, m));
     if (intervalRef.current) clearInterval(intervalRef.current);
   };
 
-  const handleComplete = () => {
-    if (mode === 'work') {
-      const next = completedSessions + 1;
-      setCompletedSessions(next);
-      switchMode(
-        next % settings.sessionsUntilLongBreak === 0
-          ? 'longBreak'
-          : 'shortBreak',
-      );
-    } else {
-      switchMode('work');
+  const applyPreset = (preset: (typeof PRESETS)[number]) => {
+    const nextSettings = {
+      workMinutes: preset.work,
+      shortBreakMinutes: preset.short,
+      longBreakMinutes: preset.long,
+      sessionsUntilLongBreak: settings.sessionsUntilLongBreak,
+    };
+    setSettings(nextSettings);
+    setIsRunning(false);
+    setTimeLeft(
+      mode === 'work'
+        ? nextSettings.workMinutes * 60
+        : mode === 'shortBreak'
+          ? nextSettings.shortBreakMinutes * 60
+          : nextSettings.longBreakMinutes * 60,
+    );
+  };
+
+  const updateSetting = (key: keyof PomodoroSettings, value: number) => {
+    const normalizedValue =
+      key === 'sessionsUntilLongBreak'
+        ? Math.min(12, Math.max(2, Math.floor(value)))
+        : clampMinutes(value);
+
+    const nextSettings = {
+      ...settings,
+      [key]: normalizedValue,
+    };
+
+    setSettings(nextSettings);
+
+    if (!isRunning) {
+      const nextSeconds =
+        mode === 'work'
+          ? nextSettings.workMinutes * 60
+          : mode === 'shortBreak'
+            ? nextSettings.shortBreakMinutes * 60
+            : nextSettings.longBreakMinutes * 60;
+      setTimeLeft(nextSeconds);
     }
   };
 
   useEffect(() => {
     if (!isRunning) return;
 
+    const emitSound = () => {
+      if (!soundEnabled) return;
+      const AudioContextCtor =
+        window.AudioContext ||
+        (window as typeof window & { webkitAudioContext?: typeof window.AudioContext })
+          .webkitAudioContext;
+      if (!AudioContextCtor) return;
+
+      const audioContext = new AudioContextCtor();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.type = 'sine';
+      oscillator.frequency.value = 880;
+      gainNode.gain.value = 0.12;
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      oscillator.start();
+      oscillator.stop(audioContext.currentTime + 0.15);
+      window.setTimeout(() => {
+        void audioContext.close();
+      }, 250);
+    };
+
+    const handleComplete = async () => {
+      const finishedMode = mode;
+      const finishedDuration = getModeMinutesFromSettings(settings, finishedMode);
+
+      setHistory((current) => [
+        {
+          id: crypto.randomUUID(),
+          mode: finishedMode,
+          completedAt: Date.now(),
+          durationMinutes: finishedDuration,
+        },
+        ...current,
+      ]);
+
+      if (finishedMode === 'work') {
+        const nextCount = completedSessions + 1;
+        setCompletedSessions(nextCount);
+        const nextMode =
+          nextCount % settings.sessionsUntilLongBreak === 0
+            ? 'longBreak'
+            : 'shortBreak';
+        setMode(nextMode);
+        setTimeLeft(getModeSecondsFromSettings(settings, nextMode));
+      } else {
+        setMode('work');
+        setTimeLeft(getModeSecondsFromSettings(settings, 'work'));
+      }
+
+      setIsRunning(false);
+      emitSound();
+      await requestBrowserNotification();
+
+      if (
+        typeof window !== 'undefined' &&
+        'Notification' in window &&
+        Notification.permission === 'granted'
+      ) {
+        new Notification(`${MODE_LABELS[finishedMode]} finished`, {
+          body: 'Ready for the next step.',
+        });
+      }
+    };
+
     intervalRef.current = window.setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
-          handleComplete();
-          return getModeMinutes(mode) * 60;
+          window.setTimeout(() => {
+            void handleComplete();
+          }, 0);
+          return 0;
         }
         return prev - 1;
       });
@@ -86,7 +221,13 @@ export default function PomodoroTimer() {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [isRunning, mode]);
+  }, [isRunning, mode, settings, completedSessions, soundEnabled]);
+
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, []);
 
   const formatTime = (s: number) =>
     `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(
@@ -94,183 +235,182 @@ export default function PomodoroTimer() {
       '0',
     )}`;
 
-  const progress = (1 - timeLeft / (getModeMinutes(mode) * 60)) * 100;
-
-  const current = modeConfig[mode];
-
   return (
     <div className="pomodoro-root">
       <div className="pomodoro-card">
-        <div
-          className="pomodoro-border"
-          style={{
-            background: `${current.color}`,
-            // boxShadow: '0 20px 60px rgba(0, 0, 0, 0)',
-          }}
-        >
-          <div className="pomodoro-inner">
-            <div className="pomodoro-header">
-              <h1 className="pomodoro-title">{current.title}</h1>
+        <div className="pomodoro-inner">
+          <div className="pomodoro-header">
+            <h2 className="pomodoro-title">Pomodoro</h2>
+            <button
+              className="button button-ghost pomodoro-settings-toggle"
+              onClick={() => setShowSettings((current) => !current)}
+              type="button"
+            >
+              {showSettings ? 'Hide settings' : 'Show settings'}
+            </button>
+          </div>
+
+          <div className="mode-switch" role="tablist" aria-label="Timer mode">
+            {(['work', 'shortBreak', 'longBreak'] as TimerMode[]).map((m) => (
               <button
-                className="icon-btn"
-                onClick={() => setShowSettings(!showSettings)}
+                key={m}
+                className={`mode-btn ${mode === m ? 'is-active' : ''}`}
+                onClick={() => switchMode(m)}
+                type="button"
               >
-                <IoMdSettings size={23} />
+                {MODE_LABELS[m]}
               </button>
-            </div>
+            ))}
+          </div>
 
-            {!showSettings ? (
-              <>
-                <div className="timer-wrapper">
-                  <svg viewBox="0 0 200 200">
-                    <circle
-                      cx="100"
-                      cy="100"
-                      r="90"
-                      fill="none"
-                      stroke="var(--border)"
-                      strokeWidth="12"
-                    />
-                    <circle
-                      cx="100"
-                      cy="100"
-                      r="90"
-                      fill="none"
-                      stroke={current.color}
-                      strokeWidth="12"
-                      strokeDasharray={2 * Math.PI * 90}
-                      strokeDashoffset={2 * Math.PI * 90 * (1 - progress / 100)}
-                      strokeLinecap="round"
-                      transform="rotate(-90 100 100)"
-                    />
-                  </svg>
-
-                  <div className="timer-center">
-                    <div>
-                      <div className="timer-time">{formatTime(timeLeft)}</div>
-                      <div className="timer-session">
-                        Session {completedSessions + 1}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="actions">
-                  <button
-                    className="primary-btn"
-                    style={{
-                      background: isRunning ? 'var(--card-2)' : current.color,
-                    }}
-                    onClick={() => setIsRunning(!isRunning)}
-                  >
-                    {isRunning ? (
-                      <>
-                        <div className="primary-icon-btn">
-                          <FaPause /> Pause
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="primary-icon-btn">
-                          <FaPlay /> Start
-                        </div>
-                      </>
-                    )}
-                  </button>
-
-                  <button className="secondary-icon-btn" onClick={resetTimer}>
-                    <FiRotateCcw size={17} />
-                  </button>
-                </div>
-
-                <div className="mode-switch">
-                  {(['work', 'shortBreak', 'longBreak'] as TimerMode[]).map(
-                    (m) => (
-                      <button
-                        key={m}
-                        className="mode-btn"
-                        style={{
-                          background:
-                            mode === m ? modeConfig[m].color : 'var(--card-2)',
-                          color: mode === m ? '#fff' : 'var(--muted)',
-                        }}
-                        onClick={() => switchMode(m)}
-                      >
-                        {m === 'work'
-                          ? 'Work'
-                          : m === 'shortBreak'
-                            ? 'Short Break'
-                            : 'Long Break'}
-                      </button>
-                    ),
-                  )}
-                </div>
-              </>
-            ) : (
-              <SettingsPanel
-                settings={settings}
-                onSave={(s) => {
-                  setSettings(s);
-                  setShowSettings(false);
-                  resetTimer();
-                }}
-                onClose={() => setShowSettings(false)}
+          <div className="timer-wrapper">
+            <svg viewBox="0 0 200 200" className="timer-ring">
+              <circle
+                cx="100"
+                cy="100"
+                r="90"
+                fill="none"
+                stroke="var(--border)"
+                strokeWidth="10"
               />
+              <circle
+                cx="100"
+                cy="100"
+                r="90"
+                fill="none"
+                stroke={getModeColor(mode)}
+                strokeWidth="10"
+                strokeDasharray={2 * Math.PI * 90}
+                strokeDashoffset={2 * Math.PI * 90 * (1 - progress / 100)}
+                strokeLinecap="round"
+                transform="rotate(-90 100 100)"
+              />
+            </svg>
+            <div className="timer-center">
+              <div className="timer-mode-label">{MODE_LABELS[mode]}</div>
+              <div className="timer-time">{formatTime(timeLeft)}</div>
+              <div className="timer-session">Completed focus sessions: {completedSessions}</div>
+            </div>
+          </div>
+
+          <div className="actions">
+            <button
+              className="primary-btn"
+              onClick={() => setIsRunning((current) => !current)}
+              type="button"
+            >
+              <span className="primary-icon-btn">
+                {isRunning ? <FaPause /> : <FaPlay />}
+                {isRunning ? 'Pause' : 'Start'}
+              </span>
+            </button>
+            <button className="secondary-icon-btn" onClick={resetTimer} type="button">
+              <FiRotateCcw size={17} />
+            </button>
+          </div>
+
+          <div className="preset-grid">
+            {PRESETS.map((preset) => (
+              <button
+                key={preset.label}
+                className="preset-btn"
+                type="button"
+                onClick={() => applyPreset(preset)}
+              >
+                {preset.label}
+              </button>
+            ))}
+          </div>
+
+          {showSettings ? (
+            <div className="settings-panel">
+              <label className="settings-group">
+                <span className="settings-label">Focus (minutes)</span>
+                <input
+                  className="settings-input"
+                  type="number"
+                  min={1}
+                  max={180}
+                  value={settings.workMinutes}
+                  onChange={(e) => updateSetting('workMinutes', Number(e.target.value))}
+                />
+              </label>
+
+              <label className="settings-group">
+                <span className="settings-label">Short break (minutes)</span>
+                <input
+                  className="settings-input"
+                  type="number"
+                  min={1}
+                  max={180}
+                  value={settings.shortBreakMinutes}
+                  onChange={(e) =>
+                    updateSetting('shortBreakMinutes', Number(e.target.value))
+                  }
+                />
+              </label>
+
+              <label className="settings-group">
+                <span className="settings-label">Long break (minutes)</span>
+                <input
+                  className="settings-input"
+                  type="number"
+                  min={1}
+                  max={180}
+                  value={settings.longBreakMinutes}
+                  onChange={(e) =>
+                    updateSetting('longBreakMinutes', Number(e.target.value))
+                  }
+                />
+              </label>
+
+              <label className="settings-group">
+                <span className="settings-label">Sessions until long break</span>
+                <input
+                  className="settings-input"
+                  type="number"
+                  min={2}
+                  max={12}
+                  value={settings.sessionsUntilLongBreak}
+                  onChange={(e) =>
+                    updateSetting('sessionsUntilLongBreak', Number(e.target.value))
+                  }
+                />
+              </label>
+
+              <label className="pomodoro-toggle">
+                <input
+                  type="checkbox"
+                  checked={soundEnabled}
+                  onChange={(e) => setSoundEnabled(e.target.checked)}
+                />
+                <span>Sound notification</span>
+              </label>
+            </div>
+          ) : null}
+
+          <div className="history-section">
+            <div className="history-title">Recent sessions</div>
+            {history.length === 0 ? (
+              <div className="muted">No sessions completed yet.</div>
+            ) : (
+              <ul className="history-list">
+                {history.slice(0, 6).map((entry) => (
+                  <li key={entry.id} className="history-item">
+                    <span>{MODE_LABELS[entry.mode]}</span>
+                    <span>
+                      {entry.durationMinutes} min ·{' '}
+                      {new Date(entry.completedAt).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </span>
+                  </li>
+                ))}
+              </ul>
             )}
           </div>
         </div>
-      </div>
-    </div>
-  );
-}
-
-function SettingsPanel({
-  settings,
-  onSave,
-  onClose,
-}: {
-  settings: PomodoroSettings;
-  onSave: (s: PomodoroSettings) => void;
-  onClose: () => void;
-}) {
-  const [local, setLocal] = useState(settings);
-
-  const input = (label: string, key: keyof PomodoroSettings) => (
-    <div className="settings-group">
-      <label className="settings-label">{label}</label>
-      <input
-        className="settings-input"
-        type="number"
-        min="1"
-        max="120"
-        value={local[key]}
-        onChange={(e) => setLocal({ ...local, [key]: Number(e.target.value) })}
-      />
-    </div>
-  );
-
-  return (
-    <div className="options-select">
-      {input('Work Time', 'workMinutes')}
-      {input('Short Break', 'shortBreakMinutes')}
-      {input('long Break', 'longBreakMinutes')}
-      {input('Sessions until Long Break', 'sessionsUntilLongBreak')}
-
-      <div className="actions">
-        <button
-          className="save-btn"
-          onClick={() => onSave(local)}
-          // style={{ background: '#fff', color: 'black', marginTop: '7px' }}
-        >
-          Save
-        </button>
-        <button
-          className="cancel-btn"
-          onClick={onClose}
-          // style={{ marginTop: '7px' }}
-        >
-          Cancel
-        </button>
       </div>
     </div>
   );
