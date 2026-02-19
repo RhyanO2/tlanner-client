@@ -247,6 +247,7 @@ textarea.input {
 
 .task-card {
   padding: 16px;
+  /* background-color: #2a2d33; */
 }
 
 .task-card-top {
@@ -320,6 +321,10 @@ textarea.input {
   overflow-y: auto;
 }
 
+.kanban-column-content .task-card.draggable {
+  background-color: var(--surface-2);
+}
+
 .kanban-empty-state {
   flex: 1;
   display: flex;
@@ -373,6 +378,15 @@ textarea.input {
   width: min(500px, 100%);
   padding: 24px;
   max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-pomodoro {
+  width: min(640px, 100%);
+}
+
+.modal-pomodoro .pomodoro-root {
+  padding: 0;
 }
 
 .modal-title {
