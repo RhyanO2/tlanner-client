@@ -93,7 +93,7 @@ function TlannerLogo(props: { compact?: boolean }) {
         x="110"
         y="83"
         fill="var(--text)"
-        fontFamily="IBM Plex Sans, Inter, Helvetica Neue, Helvetica, Arial, sans-serif"
+        fontFamily="'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji'"
         fontWeight="700"
         fontSize="70"
         letterSpacing="-1"
@@ -115,7 +115,7 @@ export function AppShell({ mode }: AppShellProps) {
       <div className="app">
         <header className="header">
           <div className="container header-inner">
-            <Link className="brand" to={authed ? '/dashboard' : '/'}>
+            <Link className="brand" to={authed ? '/' : '/'}>
               <TlannerLogo />
             </Link>
 

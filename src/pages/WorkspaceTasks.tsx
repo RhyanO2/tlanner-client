@@ -533,7 +533,7 @@ export function WorkspaceTasks() {
       {/* //pomodoro.tsx as modal */}
       {showPomodoroModal && selectedTaskForPomodoro && (
         <div className="modal-overlay" onClick={closeModals}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
+          <div className="modal modal-pomodoro" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3 className="modal-title">
                 Pomodoro - {selectedTaskForPomodoro.title}

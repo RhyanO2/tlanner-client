@@ -1,8 +1,4 @@
 @media (max-width: 1400px) {
-  .modal {
-    max-height: fit-content;
-  }
-
   .modal-overlay .pomodoro-root {
     padding: 0;
   }
