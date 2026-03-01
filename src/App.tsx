@@ -4,6 +4,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { Dashboard } from './pages/Dashboard';
 import { Landing } from './pages/Landing';
 import { Login } from './pages/Login';
+import { NotFound } from './pages/NotFound';
 import { Register } from './pages/Register';
 import { WorkspaceTasks } from './pages/WorkspaceTasks';
 import PomodoroTimer from './components/pomodoro/pomodoro';
@@ -27,6 +28,10 @@ function App() {
           <Route path="/workspace/:workspaceId" element={<WorkspaceTasks />} />
           <Route path="/habittracker" element={<HabitTracker />} />
         </Route>
+      </Route>
+
+      <Route element={<AppShell mode="public" />}>
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   );
