@@ -70,6 +70,42 @@ export type MessageResponse = {
   message: string;
 };
 
+type BillingFrequency = 'ONE_TIME' | 'MONTHLY' | 'YEARLY';
+type BillingMethod = 'PIX' | 'CARD';
+
+type BillingProduct = {
+  externalId: string;
+  name: string;
+  description?: string;
+  quantity: number;
+  price: number;
+};
+
+type BillingCustomer = {
+  name: string;
+  cellphone: string;
+  email: string;
+  taxId: string;
+};
+
+export type CreateBillingInput = {
+  frequency: BillingFrequency;
+  methods: BillingMethod[];
+  products: BillingProduct[];
+  returnUrl: string;
+  completionUrl: string;
+  customerId?: string;
+  customer?: BillingCustomer;
+  allowCoupons?: boolean;
+  coupons?: string[];
+  externalId?: string;
+  metadata?: Record<string, unknown>;
+};
+
+export type CreateBillingResponse = {
+  [key: string]: unknown;
+};
+
 export type CreateTaskResponse = {
   task: Task;
 };
@@ -191,6 +227,16 @@ export function githubRegister(): void {
   // Agora apontamos para /auth/github (a rota que você acabou de criar)
   window.location.href = `${baseUrl}/auth/github`;
 }
+
+export async function createBillingApi(
+  input: CreateBillingInput,
+): Promise<CreateBillingResponse> {
+  return apiFetch<CreateBillingResponse>('/billing/create', {
+    method: 'POST',
+    body: JSON.stringify(input),
+  });
+}
+
 // Workspace APIs
 export async function getUserWorkspacesApi(
   userId: string,
