@@ -1,73 +1,62 @@
-# React + TypeScript + Vite
+# Tlanner — Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> 🌐 **Live app:** [tlanner.com.br](https://tlanner.com.br) · Deployed on **Vercel**
 
-Currently, two official plugins are available:
+Frontend da aplicação **Tlanner**, um task planner focado em produtividade com workspaces, gerenciamento de tarefas, rastreamento de hábitos e timer Pomodoro.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## ✨ Funcionalidades
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 🗂️ Dashboard — Workspaces
+Gerencie múltiplos workspaces (projetos ou áreas de foco). Crie, edite e exclua workspaces diretamente pelo dashboard com atualização em tempo real via WebSocket.
 
-## Expanding the ESLint configuration
+### ✅ Workspace Tasks — Kanban Board
+Dentro de cada workspace, visualize e organize tarefas em três colunas:
+- **Pending** → **In Progress** → **Done**
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Cada tarefa possui **prioridade** (Low / Normal / High / Urgent) e suporte a **drag-and-drop** entre colunas. Tarefas são ordenadas automaticamente por prioridade.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 🍅 Pomodoro Timer
+Timer Pomodoro integrado diretamente nas tarefas. Inicie uma sessão de foco vinculada a qualquer tarefa para manter a concentração e medir o tempo produtivo.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### 📅 Habit Tracker
+Crie e acompanhe hábitos com frequência **diária ou semanal**. Visualize o histórico de conclusões por data e marque hábitos como concluídos no dia atual.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 🔔 Realtime Toasts
+Notificações em tempo real via WebSocket que informam ações de outros usuários (criação, edição e exclusão de tarefas, workspaces e hábitos) sem necessidade de recarregar a página.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 🔐 Autenticação
+- Login e cadastro com **e-mail e senha**
+- Login com **GitHub OAuth** (callback automático via `/auth/callback`)
+- Rotas protegidas com token JWT armazenado em `localStorage`
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🛠️ Stack
+
+| Tecnologia | Versão |
+|---|---|
+| React | 19 |
+| TypeScript | ~5.9 |
+| Vite | 7 |
+| React Router | 7 |
+| Lucide React + React Icons | — |
+| Vercel Analytics + Speed Insights | — |
+
+---
+
+## 🚀 Deploy
+
+O projeto é deployed automaticamente na **Vercel** a cada push na branch `master`.
+
+👉 [tlanner.com.br](https://tlanner.com.br)
+
+---
+
+## 🧑‍💻 Rodando localmente
+
+```bash
+pnpm install
+pnpm dev
 ```
