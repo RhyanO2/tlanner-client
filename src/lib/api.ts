@@ -1,8 +1,8 @@
 import { getToken } from './auth';
 
-const DEFAULT_API_BASE_URL =
-  'https://tlanner-main-production-aeba.up.railway.app';
-// const DEFAULT_API_BASE_URL = 'http://localhost:3000/';
+// const DEFAULT_API_BASE_URL =
+// 'https://tlanner-main-production-aeba.up.railway.app';
+const DEFAULT_API_BASE_URL = 'https://tlanner-main-1.onrender.com';
 
 export function getApiBaseUrl(): string {
   const envBase = import.meta.env.VITE_API_BASE_URL as string | undefined;
@@ -68,6 +68,42 @@ export type UserHabitsResponse = {
 
 export type MessageResponse = {
   message: string;
+};
+
+type BillingFrequency = 'ONE_TIME' | 'MONTHLY' | 'YEARLY';
+type BillingMethod = 'PIX' | 'CARD';
+
+type BillingProduct = {
+  externalId: string;
+  name: string;
+  description?: string;
+  quantity: number;
+  price: number;
+};
+
+type BillingCustomer = {
+  name: string;
+  cellphone: string;
+  email: string;
+  taxId: string;
+};
+
+export type CreateBillingInput = {
+  frequency: BillingFrequency;
+  methods: BillingMethod[];
+  products: BillingProduct[];
+  returnUrl: string;
+  completionUrl: string;
+  customerId?: string;
+  customer?: BillingCustomer;
+  allowCoupons?: boolean;
+  coupons?: string[];
+  externalId?: string;
+  metadata?: Record<string, unknown>;
+};
+
+export type CreateBillingResponse = {
+  [key: string]: unknown;
 };
 
 export type CreateTaskResponse = {
@@ -191,6 +227,16 @@ export function githubRegister(): void {
   // Agora apontamos para /auth/github (a rota que você acabou de criar)
   window.location.href = `${baseUrl}/auth/github`;
 }
+
+export async function createBillingApi(
+  input: CreateBillingInput,
+): Promise<CreateBillingResponse> {
+  return apiFetch<CreateBillingResponse>('/billing/create', {
+    method: 'POST',
+    body: JSON.stringify(input),
+  });
+}
+
 // Workspace APIs
 export async function getUserWorkspacesApi(
   userId: string,

@@ -115,8 +115,19 @@
   .kanban-board,
   .grid,
   .landing-hero,
-  .landing-columns {
+  .landing-columns,
+  .premium-plans,
+  .premium-form-grid {
     grid-template-columns: 1fr;
+  }
+
+  .premium-option-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .premium-option-footer .button {
+    width: 100%;
   }
 
   .task-actions {

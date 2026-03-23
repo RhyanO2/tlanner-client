@@ -82,3 +82,56 @@
   margin: 0 0 8px;
   font-weight: 700;
 }
+
+.premium-page {
+  display: grid;
+  gap: 14px;
+}
+
+.premium-intro,
+.premium-form-card {
+  padding: 18px;
+}
+
+.premium-benefits {
+  margin: 0;
+}
+
+.premium-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.premium-plans {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.premium-option-card {
+  display: grid;
+  gap: 14px;
+}
+
+.premium-option-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.premium-success {
+  border: 1px solid var(--border);
+}
+
+.not-found-card {
+  margin-top: 28px;
+  padding: 24px;
+  text-align: center;
+}
+
+.not-found-copy {
+  max-width: 560px;
+  margin: 8px auto 0;
+}
